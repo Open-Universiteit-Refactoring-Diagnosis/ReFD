@@ -2,7 +2,6 @@ package nl.ou.refd.locations.streams;
 
 import nl.ou.refd.analysis.subdetectors.Subdetector;
 import nl.ou.refd.analysis.subdetectors.VariableSubdetectors;
-import nl.ou.refd.locations.collections.LocationSet;
 import nl.ou.refd.locations.collections.VariableSet;
 
 /**
