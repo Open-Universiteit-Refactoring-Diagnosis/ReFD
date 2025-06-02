@@ -7,7 +7,6 @@ Bundle-Activator: nl.ou.refd.plugin.Controller
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.ensoftcorp.atlas.ui,
- com.ensoftcorp.atlas.ui.shell,
  com.ensoftcorp.atlas,
  com.ensoftcorp.atlas.db,
  com.ensoftcorp.atlas.db.common,
