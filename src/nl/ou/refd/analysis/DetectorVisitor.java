@@ -26,4 +26,5 @@ public interface DetectorVisitor {
 	void visit(MissingSuperImplementation.Method detector);
 	void visit(OverloadParameterConversion.Method detector);
 	void visit(RemovedConcreteOverride.Method detector);
+	void visit(DoubleDefinition.Variable detector);
 }

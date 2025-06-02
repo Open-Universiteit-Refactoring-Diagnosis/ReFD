@@ -165,4 +165,10 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 		handleMicrostep(addClass);
 	}
 
+	@Override
+	public void visit(DoubleDefinition.Variable detector) {
+		handleDetector(detector);
+		
+	}
+
 }

@@ -3,9 +3,11 @@ package nl.ou.refd.analysis.detectors;
 import nl.ou.refd.analysis.DetectorVisitor;
 import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.collections.MethodSet;
+import nl.ou.refd.locations.collections.VariableSet;
 import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
+import nl.ou.refd.locations.specifications.VariableSpecification;
 
 /**
  * A collection of classes which represent DoubleDefinition detectors,
@@ -87,6 +89,39 @@ public final class DoubleDefinition {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
+		public void accept(DetectorVisitor visitor) {
+			visitor.visit(this);
+		}
+		
+	}
+	
+	public static class Variable extends Detector<VariableSet> {
+
+		private final VariableSpecification subject;
+		
+		public Variable(VariableSpecification subject) {
+			this.subject = subject;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public VariableSet actualRisks() {
+			return new ProgramComponentsGenerator()
+					.stream()
+					.classes()
+					.classesByName(subject.getEnclosingMethod().getEnclosingClass().getClassName())
+					.methods()
+					.methodsWithSignature(
+							subject.getEnclosingMethod().getMethodName(), 
+							subject.getEnclosingMethod().getParameterTypes())
+					.variables()
+					.filterByName(subject.getName())
+					.collect();
+		}
+
 		@Override
 		public void accept(DetectorVisitor visitor) {
 			visitor.visit(this);

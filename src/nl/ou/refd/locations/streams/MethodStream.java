@@ -219,4 +219,8 @@ public class MethodStream extends Stream {
 	public MethodStream overrideEquivalentMethods(MethodSpecification subject) {
 		return new MethodStream(this, new MethodSubdetectors.OverrideEquivalentMethods(subject));
 	}
+	
+	public VariableStream variables() {
+		return new VariableStream(this, new MethodSubdetectors.Variables());
+	}
 }

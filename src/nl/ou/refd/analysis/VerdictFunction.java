@@ -114,5 +114,10 @@ public abstract class VerdictFunction implements DetectorVisitor {
 	public void visit(DoubleDefinition.Class detector) {
 		all(detector);
 	}
+	
+	@Override
+	public void visit(DoubleDefinition.Variable detector) {
+		all(detector);
+	}
 
 }

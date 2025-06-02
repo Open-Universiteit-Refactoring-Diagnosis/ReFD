@@ -601,4 +601,20 @@ public final class MethodSubdetectors {
 			.collect().locations();
 		}
 	}
+	
+	/**
+	 * Queries the variables of the provided method locations.
+	 * @return the variables of the provided method locations
+	 */
+	public static class Variables extends Subdetector {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
+			return Graph.query(locations).locations(Tags.ProgramLocation.VARIABLE).locations();
+		}
+	}
+	
+	
 }
