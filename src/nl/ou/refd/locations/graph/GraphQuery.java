@@ -448,5 +448,14 @@ public class GraphQuery {
 		
 		return ar;
 	}
+
+	/**
+	 * Selects variables by name from the query space.
+	 * @param variableName the name to select variables by
+	 * @return the resulting query
+	 */
+	public GraphQuery variables(String variableName) {
+		return this.locations(Tags.ProgramLocation.VARIABLE).selectLocation(Tags.Attributes.NAME, variableName);
+	}
 	
 }
