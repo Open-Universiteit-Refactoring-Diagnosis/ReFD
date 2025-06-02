@@ -36,7 +36,7 @@ public class VariableStream extends Stream{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LocationSet collect() {
+	public VariableSet collect() {
 		return new VariableSet(this.locations());
 	}
 	
