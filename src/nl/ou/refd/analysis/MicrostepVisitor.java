@@ -1,6 +1,7 @@
 package nl.ou.refd.analysis;
 
 import nl.ou.refd.analysis.microsteps.AddClass;
+import nl.ou.refd.analysis.microsteps.AddField;
 import nl.ou.refd.analysis.microsteps.AddMethod;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
 import nl.ou.refd.analysis.microsteps.RemoveMethod;
@@ -13,4 +14,5 @@ public interface MicrostepVisitor {
 	void visit(RemoveMethod microstep);
 	void visit(MoveMethod microstep);
 	void visit(AddClass addClass);
+	void visit(AddField microstep);
 }

@@ -15,6 +15,7 @@ import nl.ou.refd.analysis.detectors.MissingSuperImplementation;
 import nl.ou.refd.analysis.detectors.OverloadParameterConversion;
 import nl.ou.refd.analysis.detectors.RemovedConcreteOverride;
 import nl.ou.refd.analysis.microsteps.AddClass;
+import nl.ou.refd.analysis.microsteps.AddField;
 import nl.ou.refd.analysis.microsteps.AddMethod;
 import nl.ou.refd.analysis.microsteps.Microstep;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
@@ -168,6 +169,11 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	@Override
 	public void visit(AddClass addClass) {
 		handleMicrostep(addClass);
+	}
+	
+	@Override
+	public void visit(AddField microstep) {
+		handleMicrostep(microstep);
 	}
 
 }
