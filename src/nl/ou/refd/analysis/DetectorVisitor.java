@@ -20,6 +20,7 @@ public interface DetectorVisitor {
 	void visit(CorrespondingSubclassSpecification.Method detector);
 	void visit(DoubleDefinition.Method detector);
 	void visit(DoubleDefinition.Class detector);
+	void visit(DoubleDefinition.Field detector);
 	void visit(LostSpecification.Method detector);
 	void visit(MissingAbstractImplementation.Method detector);
 	void visit(MissingDefinition.Method detector);

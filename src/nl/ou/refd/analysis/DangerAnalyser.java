@@ -159,6 +159,11 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	public void visit(DoubleDefinition.Class detector) {
 		handleDetector(detector);
 	}
+	
+	@Override
+	public void visit(DoubleDefinition.Field detector) {
+		handleDetector(detector);
+	}
 
 	@Override
 	public void visit(AddClass addClass) {
