@@ -75,6 +75,7 @@ public final class Tags {
 		IDENTITY_PASS(XCSG.IdentityPass),
 		
 		DATAFLOW(XCSG.DataFlow_Node),
+		CONTROLFLOW(XCSG.ControlFlow_Node),
 		
 		CALL_INPUT(XCSG.CallInput),
 		
