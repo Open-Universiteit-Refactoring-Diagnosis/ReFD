@@ -7,18 +7,29 @@ import nl.ou.refd.locations.graph.Tags;
 
 public class ExpressionSpecification extends LocationSpecification {
 	
-	private ExpressionSpecification enclosingExpression;
+	//private ExpressionSpecification enclosingExpression;
+	private String expression;
+	private MethodSpecification enclosingMethod;
+	
+	public ExpressionSpecification(String expression, MethodSpecification enclosingMethod) {
+		this.expression = expression;
+		this.enclosingMethod = enclosingMethod;
+	}
 	
 	public ExpressionSpecification(ProgramLocation location) {
 		if (!locationIsExpression(location))
 			throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.DATA_FLOW");
-		this.enclosingExpression = new ExpressionSpecification(Graph.query(location).parent().singleLocation());
+		//this.enclosingExpression = new ExpressionSpecification(Graph.query(location).parent().singleLocation()); //Error: is a CONTROL_FLOW_NODE
+		this.expression = null; // TODO: get the expression from the location
+		this.enclosingMethod = new MethodSpecification(Graph.query(location)
+				.containers()
+				.locations(Tags.ProgramLocation.METHOD)
+				.singleLocation());
 	}
 
 	@Override
 	public LocationSpecification copy() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ExpressionSpecification(this.expression, enclosingMethod.copy());
 	}
 
 	@Override
@@ -37,6 +48,13 @@ public class ExpressionSpecification extends LocationSpecification {
 		return pl.taggedWith(Tags.ProgramLocation.DATAFLOW);
 	}
 	
-	
+	/**
+	 * Returns the enclosing method as an object. This object
+	 * is mutable.
+	 * @return the enclosing method as MethodSpecification
+	 */
+	public MethodSpecification getEnclosingMethod() {
+		return enclosingMethod;
+	}
 
 }
