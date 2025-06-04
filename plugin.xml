@@ -28,6 +28,15 @@
    </extension>
    
    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="nl.ou.refd.plugin.ui.topbarmenu.ExtractVariableButton"
+            id="refd.ExtractVariableButton"
+            name="ExtractVariableButton">
+      </command>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu">
@@ -45,6 +54,12 @@
                   label="Combine Methods into Class"
                   style="push"
                   tooltip="Combine a number of methods into a newly created class">
+            </command>
+            <command
+                  commandId="refd.ExtractVariableButton"
+                  label="Extract Variable"
+                  style="push"
+                  tooltip="Extract an expression into a variable and replace it with the variable">
             </command>
             
          </menu>
