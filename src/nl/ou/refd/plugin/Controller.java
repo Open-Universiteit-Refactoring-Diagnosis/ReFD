@@ -8,9 +8,11 @@ import org.osgi.framework.BundleContext;
 
 import nl.ou.refd.analysis.DangerAnalyser;
 import nl.ou.refd.analysis.refactorings.CombineMethodsIntoClass;
+import nl.ou.refd.analysis.refactorings.ExtractVariable;
 import nl.ou.refd.analysis.refactorings.PullUpMethod;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.specifications.ClassSpecification;
+import nl.ou.refd.locations.specifications.ExpressionSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
 import nl.ou.refd.locations.specifications.VariableSpecification;
 import nl.ou.refd.plugin.ui.EclipseUtil;
@@ -90,15 +92,22 @@ public class Controller extends AbstractUIPlugin {
 		}).start();
 	}
 	
-	public void extractVariable(VariableSpecification target, MethodSpecification destination) throws NoActiveProjectException {
+	/**
+	 * Starts a refactoring analysis for the Extract Variable refactoring.
+	 * This method starts a new thread to not block the program during analysis.
+	 * @param target the expression to extract
+	 * @param destination the variable the expression is assigned to
+	 * @throws NoActiveProjectException
+	 */
+	public void extractVariable(ExpressionSpecification target, VariableSpecification destination) throws NoActiveProjectException {
 		final IProject project = EclipseUtil.currentProject();
 		
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				
+				ExtractVariable refactoring = new ExtractVariable(target, destination);
+				//TODO: implement danger analyser
 			}
 		}).start();
 		
