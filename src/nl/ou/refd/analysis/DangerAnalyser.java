@@ -79,7 +79,7 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	 */
 	private void handleMoveMethodMicrostep(MoveMethod microstep) {
 		microstep.getDetectors().forEach(detector -> detector.accept(this));
-		microstep.getComponentMicrosteps().forEach(componentMicrostep -> componentMicrostep.accept(this));
+		microstep.getCompositeMicrosteps().forEach(componentMicrostep -> componentMicrostep.accept(this));
 	}
 	
 	/**

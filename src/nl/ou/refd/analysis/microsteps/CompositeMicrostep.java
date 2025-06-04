@@ -30,7 +30,7 @@ public abstract class CompositeMicrostep extends Microstep {
 	 * Gets the composite microsteps.
 	 * @return the composite microsteps
 	 */
-	public List<Microstep> getComponentMicrosteps() {
+	public List<Microstep> getCompositeMicrosteps() {
 		return new ArrayList<Microstep>(this.compositeMicrosteps);
 	}
 	
@@ -39,7 +39,7 @@ public abstract class CompositeMicrostep extends Microstep {
 	 */
 	@Override
 	public void executeOnGraph(Graph graph) {
-		this.getComponentMicrosteps().forEach(microstep -> microstep.executeOnGraph(graph));
+		this.getCompositeMicrosteps().forEach(microstep -> microstep.executeOnGraph(graph));
 	}
 
 }
