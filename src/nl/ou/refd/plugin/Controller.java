@@ -12,6 +12,7 @@ import nl.ou.refd.analysis.refactorings.PullUpMethod;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
+import nl.ou.refd.locations.specifications.VariableSpecification;
 import nl.ou.refd.plugin.ui.EclipseUtil;
 
 /**
@@ -87,5 +88,20 @@ public class Controller extends AbstractUIPlugin {
 				new DangerAnalyser(refactoring).analyse().forEach(danger -> danger.mark(new MarkerCreator(project)::defaultMarker));
 			}
 		}).start();
+	}
+	
+	public void extractVariable(VariableSpecification target, MethodSpecification destination) throws NoActiveProjectException {
+		final IProject project = EclipseUtil.currentProject();
+		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+			}
+		}).start();
+		
+		
 	}
 }
