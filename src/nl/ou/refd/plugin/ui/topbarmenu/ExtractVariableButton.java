@@ -1,9 +1,7 @@
 package nl.ou.refd.plugin.ui.topbarmenu;
 
 import org.eclipse.core.commands.ExecutionEvent;
-
 import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
-
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
@@ -42,8 +40,14 @@ public class ExtractVariableButton extends MenuButtonHandler {
 			return;
 		}
 		
-		//TODO: ask user for a variable name to prepare a VariableSpecification as the destination
-		VariableSpecification destination = null;
+		String newVariableString = DisplayUtils.promptString(
+				"New Variable", "Please provide the name and type of the new variable (name,type)");
+		String[] splitVariableString = newVariableString.split(",");
+		
+		VariableSpecification destination = new VariableSpecification(
+				splitVariableString[0], 
+				splitVariableString[1], 
+				expressionSource.getEnclosingMethod());
 		
 		try {
 			Controller.getController().extractVariable(expressionSource, destination);
