@@ -9,8 +9,10 @@ import org.osgi.framework.BundleContext;
 import nl.ou.refd.analysis.DangerAnalyser;
 import nl.ou.refd.analysis.refactorings.CombineMethodsIntoClass;
 import nl.ou.refd.analysis.refactorings.PullUpMethod;
+import nl.ou.refd.analysis.refactorings.RenameField;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.specifications.ClassSpecification;
+import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
 import nl.ou.refd.plugin.ui.EclipseUtil;
 
@@ -84,6 +86,19 @@ public class Controller extends AbstractUIPlugin {
 			@Override
 			public void run() {
 				CombineMethodsIntoClass refactoring = new CombineMethodsIntoClass(destination, targets);
+				new DangerAnalyser(refactoring).analyse().forEach(danger -> danger.mark(new MarkerCreator(project)::defaultMarker));
+			}
+		}).start();
+	}
+	
+	public void renameField(FieldSpecification target, FieldSpecification replacement) throws NoActiveProjectException {
+		final IProject project = EclipseUtil.currentProject();
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				RenameField refactoring = new RenameField(target, replacement);
 				new DangerAnalyser(refactoring).analyse().forEach(danger -> danger.mark(new MarkerCreator(project)::defaultMarker));
 			}
 		}).start();

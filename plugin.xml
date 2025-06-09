@@ -28,6 +28,15 @@
    </extension>
    
    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="nl.ou.refd.plugin.ui.topbarmenu.RenameFieldButton"
+            id="refd.RenameFieldButton"
+            name="RenameFieldButton">
+      </command>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu">
@@ -45,6 +54,12 @@
                   label="Combine Methods into Class"
                   style="push"
                   tooltip="Combine a number of methods into a newly created class">
+            </command>
+            <command
+                  commandId="refd.RenameFieldButton"
+                  label="Rename Field"
+                  style="push"
+                  tooltip="Rename a field in a class">
             </command>
             
          </menu>
