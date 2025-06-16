@@ -458,4 +458,13 @@ public class GraphQuery {
 		return this.locations(Tags.ProgramLocation.VARIABLE).selectLocation(Tags.Attributes.NAME, variableName);
 	}
 	
+	/**
+	 * Adds relations from the given query space to this query space.
+	 * @param relations the relations to add
+	 * @return the resulting query
+	 */
+	public GraphQuery induce(GraphQuery relations) {
+		return new GraphQuery(this.q.induce(relations.q));
+	}
+	
 }
