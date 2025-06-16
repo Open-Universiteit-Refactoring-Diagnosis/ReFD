@@ -6,6 +6,7 @@ import nl.ou.refd.exceptions.IncompatibleProgramLocationException;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
+import nl.ou.refd.locations.graph.Tags.Relation;
 
 /**
  * Class representing a specification of a variable location
@@ -38,11 +39,18 @@ public class VariableSpecification extends LocationSpecification {
 	 * @throws IncompatibleProgramLocationException if the provided ProgramLocation is not a valid variable
 	 */
 	public VariableSpecification(ProgramLocation location) {
-		if (!locationIsVariable(location))
-			throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.VARIABLE");
+		//if (!locationIsVariable(location))
+		//	throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.VARIABLE");
 		this.name = location.<String>getAttribute(Tags.Attributes.NAME);
-		this.type = null; //TODO: retrieve type from a ProgramLocation
-		this.enclosingMethod = new MethodSpecification(Graph.query(location).parent().singleLocation());
+		this.type = Graph.query(location)
+				.forwardDifference(Tags.Relation.TYPE_OF)
+				.singleLocation()
+				.<String>getAttribute(Tags.Attributes.NAME);
+		this.enclosingMethod = new MethodSpecification(Graph.query(location)
+				.containers()
+				.locations(Tags.ProgramLocation.METHOD)
+				.singleLocation());
+		assert true;
 	}
 	
 	/**
@@ -51,7 +59,7 @@ public class VariableSpecification extends LocationSpecification {
 	 * @return true if ProgramLocation instance is a variable, false otherwise
 	 */
 	public static boolean locationIsVariable(ProgramLocation pl) {
-		return pl.taggedWith(Tags.ProgramLocation.VARIABLE);
+		return pl.taggedWith(Tags.ProgramLocation.VARIABLE);  // TODO: Error, uses XCSG.Initialization for var declaration 
 	}
 	
 	/**
