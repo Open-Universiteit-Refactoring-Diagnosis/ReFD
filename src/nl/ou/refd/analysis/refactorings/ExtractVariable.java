@@ -7,8 +7,10 @@ import nl.ou.refd.locations.specifications.VariableSpecification;
 
 public class ExtractVariable extends Refactoring {
 	
+	private final ExpressionSpecification target;
+	
 	public ExtractVariable(ExpressionSpecification target, VariableSpecification destination) {
-		
+		this.target = target;
 	}
 
 	@Override
