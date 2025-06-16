@@ -32,13 +32,20 @@ public class ExtractVariableButton extends MenuButtonHandler {
 		
 		ExpressionSpecification expressionSource = null;
 		
-		if (ExpressionSpecification.locationIsExpression(location)) {
-			expressionSource = new ExpressionSpecification(location);
-		}
-		else {
-			DisplayUtils.showMessage("Error: Selection was not an expression");
-			return;
-		}
+		// TODO: can't directly select expression with multiple operators and operands in Atlas
+//		if (ExpressionSpecification.locationIsExpression(location)) {
+//			expressionSource = new ExpressionSpecification(location);
+//		}
+//		else {
+//			DisplayUtils.showMessage("Error: Selection was not an expression");
+//			return;
+//		}
+		
+		// Check location is a statement
+		
+		// Open dialog and ask user to select expression
+		
+		// Check expression is valid (hard to do!)
 		
 		String newVariableString = DisplayUtils.promptString(
 				"New Variable", "Please provide the name and type of the new variable (name,type)");
