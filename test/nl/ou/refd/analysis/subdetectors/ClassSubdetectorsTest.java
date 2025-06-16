@@ -1,9 +1,10 @@
 package nl.ou.refd.analysis.subdetectors;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,16 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.ensoftcorp.atlas.core.indexing.IndexWorkspace;
 import com.ensoftcorp.atlas.core.indexing.IMappingSettings;
+import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
+import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
-import nl.ou.refd.locations.specifications.ClassSpecification;
-import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
-import nl.ou.refd.locations.specifications.PackageSpecification;
 
 public class ClassSubdetectorsTest {
 
@@ -30,11 +29,14 @@ public class ClassSubdetectorsTest {
 	
 	@BeforeAll
 	static void initAll() { 
-		Collection<IMappingSettings> settings = new HashSet<IMappingSettings>();
-		settings.add(new Settings());
-		IndexWorkspace.IndexWorkspaceJob job = new IndexWorkspace.IndexWorkspaceJob(settings);
-		job.schedule();
-		System.out.println("name: " + job.getName() + " state: " + job.getResult().toString());
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = root.getProject("CaseStudy");
+
+		try {
+			ProjectImporterUtil.mapProject(project);
+		} catch (AtlasLicenseException e) {
+			System.out.println("Indexing failed. No valid license");
+		}
 	}
 	
 	@BeforeEach
@@ -44,8 +46,6 @@ public class ClassSubdetectorsTest {
 	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {	
 		// Arrange
 		String name = "LegacyEmployee";
-		//PackageSpecification pkg = new PackageSpecification("nl.ou.refd.mocks");
-		//ClassSpecification cls = new ClassSpecification(name, AccessModifier.PUBLIC, pkg);
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
