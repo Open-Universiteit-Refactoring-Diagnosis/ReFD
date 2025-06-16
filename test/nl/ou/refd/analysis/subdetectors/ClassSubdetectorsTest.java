@@ -17,6 +17,7 @@ import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DirectSuperClasses;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
@@ -49,11 +50,16 @@ public class ClassSubdetectorsTest {
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
-		Set<ProgramLocation> result = clsByName.applyOn(Graph.query().universe().locations());
+		Set<ProgramLocation> result = clsByName.applyOn(Graph.query()
+				.universe()
+				.locations());
 		
 		// Assert
 		Assertions.assertEquals(1, result.size());
-		Assertions.assertEquals(name, result.iterator().next().<String>getAttribute(Tags.Attributes.NAME));
+		Assertions.assertEquals(name, result
+				.iterator()
+				.next()
+				.<String>getAttribute(Tags.Attributes.NAME));
 	}
 	
 	@Test
@@ -63,10 +69,50 @@ public class ClassSubdetectorsTest {
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
-		Set<ProgramLocation> result = clsByName.applyOn(Graph.query().universe().locations());
+		Set<ProgramLocation> result = clsByName.applyOn(Graph.query()
+				.universe()
+				.locations());
 		
 		// Assert
 		Assertions.assertEquals(0, result.size());
+	}
+	
+	@Test
+	void givenClassWithSuper_whenDetectDirectSuperClasses_thenReturnOneLocationOfDirectSuper() {
+		// Arrange
+		String subName = "Employee";
+		String superName = "LegacyEmployee";
+		Set<ProgramLocation> subCls = new ClassesByName(subName).applyOn(Graph.query()
+				.universe()
+				.locations());
+		DirectSuperClasses superCls = new DirectSuperClasses();
+		
+		// Act
+		Set<ProgramLocation> result = superCls.applyOn(subCls);
+		
+		// Assert
+		Assertions.assertEquals(1,  result.size());
+		Assertions.assertEquals(superName, result
+				.iterator()
+				.next()
+				.<String>getAttribute(Tags.Attributes.NAME));
+	}
+	
+	@Test
+	void givenClassWithoutSuper_whenDetectDirectSuperClasses_thenReturnObject() {
+		// Arrange
+				String name = "LegacyEmployee";
+				Set<ProgramLocation> cls = new ClassesByName(name).applyOn(Graph.query()
+						.universe()
+						.locations());
+				DirectSuperClasses superCls = new DirectSuperClasses();
+				
+				// Act
+				Set<ProgramLocation> result = superCls.applyOn(cls);
+				
+				// Assert
+				Assertions.assertEquals(1,  result.size());
+				Assertions.assertEquals("Object", result.iterator().next().<String>getAttribute(Tags.Attributes.NAME));
 	}
 	
 	@AfterEach
