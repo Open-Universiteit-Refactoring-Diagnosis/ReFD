@@ -50,7 +50,7 @@ public final class Tags {
 		FINAL_METHOD(XCSG.Java.finalMethod),
 		FUNCTION(XCSG.Function),
 		PARAMETER(XCSG.Parameter),
-		VARIABLE(XCSG.Variable),
+		VARIABLE(XCSG.Variable),		
 		INSTANCE_VARIABLE(XCSG.InstanceVariable),
 		CLASS_VARIABLE(XCSG.ClassVariable),
 		NAMESPACE(XCSG.Namespace),
@@ -75,7 +75,15 @@ public final class Tags {
 		IDENTITY_PASS(XCSG.IdentityPass),
 		
 		DATAFLOW(XCSG.DataFlow_Node),
+		
 		CONTROLFLOW(XCSG.ControlFlow_Node),
+		CONTROLFLOW_BLOCK(XCSG.ControlFlowBlock),
+		CONTROLFLOW_ROOT(XCSG.controlFlowRoot),
+		CONTROLFLOW_EXITPOINT(XCSG.controlFlowExitPoint),
+		//STACK_VARIABLE(XCSG.StackVariable),
+		INITIALIZATION(XCSG.Initialization),
+		ASSIGNMENT(XCSG.Assignment),
+		//DEFAULT_VALUE(XCSG.DefaultValue),
 		
 		CALL_INPUT(XCSG.CallInput),
 		
@@ -117,6 +125,7 @@ public final class Tags {
 		TYPE_OF(XCSG.TypeOf),
 		EXTENDS(XCSG.Java.Extends),
 		DATAFLOW(XCSG.DataFlow_Edge),
+		CONTROLFLOW(XCSG.ControlFlow_Edge),
 		SUPERTYPE(XCSG.Supertype),
 		IDENTITY_PASSED_TO(XCSG.IdentityPassedTo),
 		INVOKED_SIGNATURE(XCSG.InvokedSignature),
