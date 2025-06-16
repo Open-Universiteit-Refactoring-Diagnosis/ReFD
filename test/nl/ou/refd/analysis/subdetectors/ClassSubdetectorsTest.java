@@ -41,12 +41,11 @@ public class ClassSubdetectorsTest {
 	void init() { }
 	
 	@Test
-	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {
-		
+	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {	
 		// Arrange
 		String name = "LegacyEmployee";
-		PackageSpecification pkg = new PackageSpecification("nl.ou.refd.mocks");
-		ClassSpecification cls = new ClassSpecification(name, AccessModifier.PUBLIC, pkg);
+		//PackageSpecification pkg = new PackageSpecification("nl.ou.refd.mocks");
+		//ClassSpecification cls = new ClassSpecification(name, AccessModifier.PUBLIC, pkg);
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
@@ -55,6 +54,19 @@ public class ClassSubdetectorsTest {
 		// Assert
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(name, result.iterator().next().<String>getAttribute(Tags.Attributes.NAME));
+	}
+	
+	@Test
+	void givenNonExistingClassName_whenDetectClassesByName_thenReturnEmpty() {
+		// Arrange
+		String name = "NonExistingClass";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		Set<ProgramLocation> result = clsByName.applyOn(Graph.query().universe().locations());
+		
+		// Assert
+		Assertions.assertEquals(0, result.size());
 	}
 	
 	@AfterEach
