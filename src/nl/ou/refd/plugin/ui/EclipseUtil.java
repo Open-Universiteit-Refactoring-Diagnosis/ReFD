@@ -2,6 +2,8 @@ package nl.ou.refd.plugin.ui;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -21,11 +23,7 @@ public class EclipseUtil {
 	 * @throws NoActiveProjectException if there is no project currently open
 	 */
 	public static IProject currentProject() throws NoActiveProjectException {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		
-		IWorkbenchPage activePage = window.getActivePage();
-		
-		IEditorPart activeEditor = activePage.getActiveEditor();
+		IEditorPart activeEditor = getActivePage().getActiveEditor();
 		
 		if (activeEditor != null) {
 			IEditorInput input = activeEditor.getEditorInput();
@@ -42,6 +40,29 @@ public class EclipseUtil {
 		}
 		
 		throw new NoActiveProjectException("No active project to get the name of");
+	}
+	
+	/**
+	 * Gets the current selected text in the eclipse editor
+	 * @return the selected text or the empty string if none selected
+	 */
+	public static String currentEditorTextSelection() {
+		ISelection selection = getActivePage().getSelection();
+		
+		if (selection instanceof TextSelection) {
+			return ((TextSelection)selection).getText();
+		}
+		return "";
+	}
+	
+	/**
+	 * Gets the active page of the eclipse editor
+	 * @return the active page
+	 */
+	private static IWorkbenchPage getActivePage() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		
+		return window.getActivePage();
 	}
 	
 }
