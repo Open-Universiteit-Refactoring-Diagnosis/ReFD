@@ -41,7 +41,7 @@ public class ClassSubdetectorsTest {
 	void init() { }
 	
 	@Test
-	void testClassesByName() {
+	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {
 		
 		// Arrange
 		String name = "LegacyEmployee";
