@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<properties>
+   <jars>
+      <applications/>
+      <libraries>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.atlas.core_4.2.8.202502132211.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.atlas.db.common_4.2.8.202502132211.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.atlas.db.implementation_4.2.8.202502132211.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.atlas.db_4.2.8.202502132211.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.atlas.ui_4.2.8.202502132211.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.open.commons.ui_3.9.2.202305211154.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/com.ensoftcorp.open.commons_3.9.2.202305211154.jar"/>
+         <jar path="/Program Files/Java/jdk-24.0.1/lib/jrt-fs.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/junit-jupiter-api_5.11.4.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.apache.commons.lang3_3.17.0.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.core.commands_3.12.300.v20241229-1638.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.core.contenttype_3.9.600.v20241001-1711.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.core.jobs_3.15.500.v20250204-0817.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.core.resources_3.22.100.v20250206-1238.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.core.runtime_3.33.0.v20250206-0919.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.e4.ui.workbench3_0.17.400.v20240321-1245.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.equinox.common_3.20.0.v20250129-1348.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.equinox.registry_3.12.300.v20250129-1129.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.jface_3.36.0.v20250129-1243.jar"/>
+         <jar main-class="org.eclipse.core.runtime.adaptor.EclipseStarter" path="/Users/danny/.p2/pool/plugins/org.eclipse.osgi_3.23.0.v20250228-0640.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.swt.win32.win32.x86_64_3.129.0.v20250221-1734.jar"/>
+         <jar path="/Users/danny/.p2/pool/plugins/org.eclipse.ui.workbench_3.135.0.v20250204-1142.jar"/>
+      </libraries>
+      <runtimes/>
+   </jars>
+</properties>
