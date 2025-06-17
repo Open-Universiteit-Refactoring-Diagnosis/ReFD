@@ -7,6 +7,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import nl.ou.refd.analysis.DangerAnalyser;
+import nl.ou.refd.analysis.refactorings.ChangeMethodSpecification;
 import nl.ou.refd.analysis.refactorings.CombineMethodsIntoClass;
 import nl.ou.refd.analysis.refactorings.PullUpMethod;
 import nl.ou.refd.exceptions.NoActiveProjectException;
@@ -47,6 +48,25 @@ public class Controller extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		controller = null;
 		super.stop(context);
+	}
+	
+	/**
+	 * Start a refactoring analysis for the Change Method Declaration refactoring.
+	 * This method starts a new thread to not block the program during analysis.
+	 * @param target The method of which to change its specification.
+	 * @param newSpecification The new method specification.
+	 * @throws NoActiveProjectException
+	 */
+	public void changeMethodSpecification(MethodSpecification target, MethodSpecification newSpecification) throws NoActiveProjectException {
+		final IProject project = EclipseUtil.currentProject();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ChangeMethodSpecification refactoring = new ChangeMethodSpecification(target, newSpecification);
+				new DangerAnalyser(refactoring).analyse().forEach(danger -> danger.mark(new MarkerCreator(project)::defaultMarker));
+			}
+		}).start();
 	}
 	
 	/**

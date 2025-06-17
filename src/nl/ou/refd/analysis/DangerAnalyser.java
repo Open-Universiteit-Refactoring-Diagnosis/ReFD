@@ -19,6 +19,7 @@ import nl.ou.refd.analysis.microsteps.AddMethod;
 import nl.ou.refd.analysis.microsteps.Microstep;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
 import nl.ou.refd.analysis.microsteps.RemoveMethod;
+import nl.ou.refd.analysis.microsteps.RenameMethod;
 import nl.ou.refd.analysis.refactorings.Refactoring;
 import nl.ou.refd.locations.collections.LabeledLocationSet;
 import nl.ou.refd.locations.graph.Graph;
@@ -89,6 +90,11 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	private void handleDetector(Detector<?> detector) {
 		detector.accept(this.verdictFunction);
 	}
+	
+	@Override
+	public void visit(AddClass microstep) {
+		handleMicrostep(microstep);
+	}
 
 	@Override
 	public void visit(AddMethod microstep) {
@@ -97,6 +103,11 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 
 	@Override
 	public void visit(RemoveMethod microstep) {
+		handleMicrostep(microstep);
+	}
+	
+	@Override
+	public void visit(RenameMethod microstep) {
 		handleMicrostep(microstep);
 	}
 	
@@ -158,11 +169,6 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	@Override
 	public void visit(DoubleDefinition.Class detector) {
 		handleDetector(detector);
-	}
-
-	@Override
-	public void visit(AddClass addClass) {
-		handleMicrostep(addClass);
 	}
 
 }
