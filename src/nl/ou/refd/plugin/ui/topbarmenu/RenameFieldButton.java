@@ -70,7 +70,6 @@ public class RenameFieldButton extends MenuButtonHandler {
 		try {
 			currentProject = EclipseUtil.currentProject();
 		} catch (NoActiveProjectException e) {
-			System.out.println("***** COULD NOT GET PROJECT? ********");
 			DisplayUtils.showMessage("Error: No active project");
 			return;
 		}
