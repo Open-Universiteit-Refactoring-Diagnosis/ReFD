@@ -4,7 +4,9 @@ import nl.ou.refd.analysis.microsteps.AddClass;
 import nl.ou.refd.analysis.microsteps.AddField;
 import nl.ou.refd.analysis.microsteps.AddMethod;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
+import nl.ou.refd.analysis.microsteps.RemoveField;
 import nl.ou.refd.analysis.microsteps.RemoveMethod;
+import nl.ou.refd.analysis.microsteps.RenameFieldComposite;
 
 /**
  * Interface which represents a visitor for microsteps.
@@ -15,4 +17,6 @@ public interface MicrostepVisitor {
 	void visit(MoveMethod microstep);
 	void visit(AddClass addClass);
 	void visit(AddField microstep);
+	void visit(RemoveField microstep);
+	void visit(RenameFieldComposite microstep);
 }

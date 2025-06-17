@@ -91,6 +91,7 @@ public class Controller extends AbstractUIPlugin {
 		}).start();
 	}
 	
+	
 	public void renameField(FieldSpecification target, FieldSpecification replacement) throws NoActiveProjectException {
 		final IProject project = EclipseUtil.currentProject();
 		

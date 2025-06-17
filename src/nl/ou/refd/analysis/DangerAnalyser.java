@@ -19,7 +19,9 @@ import nl.ou.refd.analysis.microsteps.AddField;
 import nl.ou.refd.analysis.microsteps.AddMethod;
 import nl.ou.refd.analysis.microsteps.Microstep;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
+import nl.ou.refd.analysis.microsteps.RemoveField;
 import nl.ou.refd.analysis.microsteps.RemoveMethod;
+import nl.ou.refd.analysis.microsteps.RenameFieldComposite;
 import nl.ou.refd.analysis.refactorings.Refactoring;
 import nl.ou.refd.locations.collections.LabeledLocationSet;
 import nl.ou.refd.locations.graph.Graph;
@@ -173,6 +175,14 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	
 	@Override
 	public void visit(AddField microstep) {
+		handleMicrostep(microstep);
+	}
+	
+	public void visit(RemoveField microstep) {
+		handleMicrostep(microstep);
+	}
+	
+	public void visit(RenameFieldComposite microstep) {
 		handleMicrostep(microstep);
 	}
 

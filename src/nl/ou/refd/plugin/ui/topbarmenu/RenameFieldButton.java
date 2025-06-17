@@ -70,11 +70,12 @@ public class RenameFieldButton extends MenuButtonHandler {
 		try {
 			currentProject = EclipseUtil.currentProject();
 		} catch (NoActiveProjectException e) {
+			System.out.println("***** COULD NOT GET PROJECT? ********");
 			DisplayUtils.showMessage("Error: No active project");
 			return;
 		}
 		
-		String newFieldString = DisplayUtils.promptString("Rename field", "Please provide the new name and visibility for the field (name, visibility)");
+		String newFieldString = DisplayUtils.promptString("Rename field", "Please provide the new name for the field (name, visibility)");
 		String[] rawStrings = newFieldString.split(",");
 		String[] splitFieldString = new String[2];
 		for (int i=0; i<splitFieldString.length; i++)	{

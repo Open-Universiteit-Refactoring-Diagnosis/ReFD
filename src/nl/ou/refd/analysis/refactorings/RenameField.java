@@ -3,22 +3,25 @@ package nl.ou.refd.analysis.refactorings;
 import nl.ou.refd.analysis.DangerAggregator;
 import nl.ou.refd.analysis.VerdictFunction;
 import nl.ou.refd.analysis.detectors.DoubleDefinition;
-import nl.ou.refd.analysis.microsteps.AddField;
-import nl.ou.refd.locations.specifications.ClassSpecification;
+import nl.ou.refd.analysis.microsteps.RenameFieldComposite;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 
+/**
+ * Class representing a Rename Field refactoring. This refactoring can be analyzed by
+ * using a DangerAnalyzer object.
+ */
 public class RenameField extends Refactoring {
 	
-	private final FieldSpecification target;
-	private final FieldSpecification replacement;
-	
+	/**
+	 * Creates the Rename Field refactoring with the target field to rename
+	 * and the replacement field that it should be renamed to.
+	 * @param target field that should be renamed
+	 * @param replacment the field that the target should be renamed to
+	 */	
 	public RenameField(FieldSpecification target, FieldSpecification replacement) {
-		this.target = target;
-		this.replacement = replacement;
-		microstep(new AddField(replacement));
+		microstep(new RenameFieldComposite(target, replacement));
 	}
-
-	@Override
+	
 	public VerdictFunction verdictFunction(DangerAggregator aggregator) {
 		return new VerdictFunction(aggregator) {
 			
