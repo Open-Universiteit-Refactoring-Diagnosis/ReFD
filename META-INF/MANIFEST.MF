@@ -4,8 +4,7 @@ Bundle-Name: RefD
 Bundle-SymbolicName: RefD;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: nl.ou.refd.plugin.Controller
-Bundle-ClassPath: lib/hamcrest-3.0.jar,
- lib/awaitility-4.3.0.jar,
+Bundle-ClassPath: lib/awaitility-4.3.0.jar,
  .
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
