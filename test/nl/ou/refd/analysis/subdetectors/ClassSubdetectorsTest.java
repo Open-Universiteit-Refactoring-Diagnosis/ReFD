@@ -1,5 +1,6 @@
 package nl.ou.refd.analysis.subdetectors;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +23,10 @@ import com.ensoftcorp.atlas.core.indexing.IndexStatus;
 import com.ensoftcorp.atlas.core.indexing.IndexStatusUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AllSuperClasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DirectSuperClasses;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.Methods;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
@@ -71,14 +74,14 @@ public class ClassSubdetectorsTest {
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
-		Set<ProgramLocation> result = clsByName.applyOn(querySpace);
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
 		
 		// Assert
 		Assertions.assertEquals(1, result.size());
-		Assertions.assertEquals(name, result
-				.iterator()
-				.next()
-				.<String>getAttribute(Tags.Attributes.NAME));
+		Assertions.assertEquals(name, result.get(0));
 	}
 	
 	@Test
@@ -103,29 +106,88 @@ public class ClassSubdetectorsTest {
 		DirectSuperClasses superCls = new DirectSuperClasses();
 		
 		// Act
-		Set<ProgramLocation> result = superCls.applyOn(subCls);
+		List<String> result = superCls.applyOn(subCls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
 		
 		// Assert
 		Assertions.assertEquals(1,  result.size());
-		Assertions.assertEquals(superName, result
-				.iterator()
-				.next()
-				.<String>getAttribute(Tags.Attributes.NAME));
+		Assertions.assertEquals(superName, result.get(0));
 	}
 	
 	@Test
 	void givenClassWithoutSuper_whenDetectDirectSuperClasses_thenReturnObject() {
 		// Arrange
-				String name = "ClassANoSuper";
-				Set<ProgramLocation> cls = new ClassesByName(name).applyOn(querySpace);
-				DirectSuperClasses superCls = new DirectSuperClasses();
-				
-				// Act
-				Set<ProgramLocation> result = superCls.applyOn(cls);
-				
-				// Assert
-				Assertions.assertEquals(1,  result.size());
-				Assertions.assertEquals("Object", result.iterator().next().<String>getAttribute(Tags.Attributes.NAME));
+		String name = "ClassANoSuper";
+		Set<ProgramLocation> cls = new ClassesByName(name).applyOn(querySpace);
+		DirectSuperClasses superCls = new DirectSuperClasses();
+		
+		// Act
+		List<String> result = superCls.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1,  result.size());
+		Assertions.assertEquals("Object", result.get(0));
+	}
+	
+	@Test
+	void givenClassWithMultipleSuper_whenDetectAllSuperClasses_thenReturnAll() {
+		// Arrange
+		String clsName = "ClassCExtendsB";
+		List<String> superNames = List.of("ClassANoSuper", "ClassBExtendsA", "Object");
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		AllSuperClasses superCls = new AllSuperClasses();
+		
+		// Act
+		List<String> result = superCls.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(superNames.containsAll(result));
+	}
+	
+	@Test
+	void givenClassWithNoSuper_whenDetectAllSuperClasses_thenReturnObject() {
+		// Arrange
+		String clsName = "ClassANoSuper";
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		AllSuperClasses superCls = new AllSuperClasses();
+		
+		// Act
+		List<String> result = superCls.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertTrue("Object".equals(result.get(0)));
+	}
+	
+	@Test
+	void givenClassWithPublicAndPrivateMethods_whenDetectMethods_thenReturnAllClassMethods() {
+		// Arrange
+		String clsName = "ClassANoSuper";
+		List<String> methodNames = List.of("MethodA1", "MethodA2", "MethodA3");
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		Methods methods = new Methods();
+		
+		// Act
+		List<String> result = methods.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
 	@AfterEach
