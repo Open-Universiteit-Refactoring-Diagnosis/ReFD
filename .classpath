@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/hamcrest-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/awaitility-4.3.0.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="com/ensoftcorp/atlas/core/internal/**"/>

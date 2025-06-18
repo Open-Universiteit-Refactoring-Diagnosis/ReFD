@@ -1,10 +1,15 @@
 package nl.ou.refd.analysis.subdetectors;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+
+import org.hamcrest.Matchers;
+import org.awaitility.Awaitility;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +17,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.ensoftcorp.atlas.core.indexing.IMappingSettings;
 import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
+import com.ensoftcorp.atlas.core.indexing.IndexStatus;
+import com.ensoftcorp.atlas.core.indexing.IndexStatusUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
@@ -24,17 +30,19 @@ import nl.ou.refd.locations.graph.Tags;
 
 public class ClassSubdetectorsTest {
 
-	static class Settings implements IMappingSettings {
-		Settings() { }
-	}
+	static final String TEST_PROJECT_NAME = "ReFDTestProject";
 	
 	@BeforeAll
 	static void initAll() { 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = root.getProject("CaseStudy");
+		IProject project = root.getProject(TEST_PROJECT_NAME);
 
 		try {
 			ProjectImporterUtil.mapProject(project);
+			Awaitility.await()
+				.atMost(10, TimeUnit.SECONDS)
+				.pollDelay(100, TimeUnit.MILLISECONDS)
+				.until( () -> IndexStatusUtil.getIndexStatus(), Matchers.equalTo(IndexStatus.READY));
 		} catch (AtlasLicenseException e) {
 			System.out.println("Indexing failed. No valid license");
 		}
@@ -46,7 +54,7 @@ public class ClassSubdetectorsTest {
 	@Test
 	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {	
 		// Arrange
-		String name = "LegacyEmployee";
+		String name = "ClassANoSuper";
 		ClassesByName clsByName = new ClassesByName(name);
 		
 		// Act
@@ -80,8 +88,8 @@ public class ClassSubdetectorsTest {
 	@Test
 	void givenClassWithSuper_whenDetectDirectSuperClasses_thenReturnOneLocationOfDirectSuper() {
 		// Arrange
-		String subName = "Employee";
-		String superName = "LegacyEmployee";
+		String subName = "ClassCExtendsB";
+		String superName = "ClassBExtendsA";
 		Set<ProgramLocation> subCls = new ClassesByName(subName).applyOn(Graph.query()
 				.universe()
 				.locations());
@@ -101,7 +109,7 @@ public class ClassSubdetectorsTest {
 	@Test
 	void givenClassWithoutSuper_whenDetectDirectSuperClasses_thenReturnObject() {
 		// Arrange
-				String name = "LegacyEmployee";
+				String name = "ClassANoSuper";
 				Set<ProgramLocation> cls = new ClassesByName(name).applyOn(Graph.query()
 						.universe()
 						.locations());
