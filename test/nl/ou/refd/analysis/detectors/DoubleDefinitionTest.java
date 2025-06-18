@@ -1,12 +1,9 @@
 package nl.ou.refd.analysis.detectors;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 import org.awaitility.Awaitility;
 import org.awaitility.core.ConditionTimeoutException;
 import org.eclipse.core.resources.IProject;
@@ -36,7 +33,7 @@ public class DoubleDefinitionTest {
 
 	static final String TEST_PROJECT_NAME = "ReFDTestProject";
 	static final String TEST_PACKAGE_NAME = "nl.ou.refd.test.analysis.detectors.doubledefinition";
-	static final long MAPPING_TIMEOUT = 10;
+	static final long MAPPING_TIMEOUT = 20;
 	
 	private final static PackageSpecification pkg = new PackageSpecification(TEST_PACKAGE_NAME);
 	
@@ -67,8 +64,10 @@ public class DoubleDefinitionTest {
 	@Test
 	void givenExistingClassName_whenDetectClass_thenActualRisk() {
 		// Arrange
-		String name = "ClassA";
-		ClassSpecification clsSpec = new ClassSpecification(name, AccessModifier.PUBLIC, pkg);
+		String clsName = "ClassA";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
 		DoubleDefinition.Class ddClass = new DoubleDefinition.Class(clsSpec);
 		
 		// Act
@@ -80,14 +79,16 @@ public class DoubleDefinitionTest {
 		
 		// Assert
 		Assertions.assertEquals(1, result.size());
-		Assertions.assertEquals(name, result.get(0));
+		Assertions.assertEquals(clsName, result.get(0));
 	}
 	
 	@Test
 	void givenNonExistingClassName_whenDetectClass_thenNoRisk() {
 		// Arrange
-		String name = "NonExisitingClass";
-		ClassSpecification clsSpec = new ClassSpecification(name, AccessModifier.PUBLIC, pkg);
+		String clsName = "NonExisitingClass";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
 		DoubleDefinition.Class ddClass = new DoubleDefinition.Class(clsSpec);
 		
 		// Act
@@ -101,10 +102,14 @@ public class DoubleDefinitionTest {
 	void givenExistingMethodNoParams_whenDetectMethod_thenActualRisk() {
 		// Arrange
 		String clsName = "ClassA";
-		String name = "methodA1";
-		ClassSpecification clsSpec = new ClassSpecification(clsName, AccessModifier.PUBLIC, pkg);
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		String mName = "methodA1";
+		AccessModifier mAccess = AccessModifier.PUBLIC;
+		String rtnType = "void";
+		
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
 		MethodSpecification mSpec = new MethodSpecification(
-				name, List.of(), AccessModifier.PUBLIC, false, false, "void", clsSpec);
+				mName, List.of(), mAccess, false, false, rtnType, clsSpec);
 		DoubleDefinition.Method ddMethod = new DoubleDefinition.Method(mSpec);
 		
 		// Act
@@ -116,7 +121,7 @@ public class DoubleDefinitionTest {
 		
 		// Assert
 		Assertions.assertEquals(1, result.size());
-		Assertions.assertEquals(name, result.get(0));
+		Assertions.assertEquals(mName, result.get(0));
 	}
 	
 	/**
@@ -128,9 +133,13 @@ public class DoubleDefinitionTest {
 	void givenExistingMethodWithParams_whenDetectMethod_thenActualRisk() {
 		// Arrange
 		String clsName = "ClassA";
-		String name = "methodA2";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		String mName = "methodA2";
+		AccessModifier mAccess = AccessModifier.PRIVATE;
+		String rtnType = "int";
 		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "long");
-		ClassSpecification clsSpec = new ClassSpecification(clsName, AccessModifier.PUBLIC, pkg);
+		
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
 		
 		List<ParameterSpecification> paramSpecs = params.entrySet()
 				.stream()
@@ -138,7 +147,7 @@ public class DoubleDefinitionTest {
 				.toList();
 		
 		MethodSpecification mSpec = new MethodSpecification(
-				name, paramSpecs, AccessModifier.PRIVATE, false, false, "void", clsSpec);
+				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
 		DoubleDefinition.Method ddMethod = new DoubleDefinition.Method(mSpec);
 		
 		// Act
@@ -150,9 +159,102 @@ public class DoubleDefinitionTest {
 		
 		// Assert
 		Assertions.assertEquals(1, result.size());
-		Assertions.assertEquals(name, result.get(0));
+		Assertions.assertEquals(mName, result.get(0));
 	}
 	
+	@Test
+	void givenMethodWithDifferentReturnType_whenDetectMethod_thenActualRisk() {
+		// Arrange
+		String clsName = "ClassA";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		String mName = "methodA2";
+		AccessModifier mAccess = AccessModifier.PRIVATE;
+		String rtnType = "boolean";
+		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "long");
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
+		
+		List<ParameterSpecification> paramSpecs = params.entrySet()
+				.stream()
+				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
+				.toList();
+		
+		MethodSpecification mSpec = new MethodSpecification(
+				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
+		DoubleDefinition.Method ddMethod = new DoubleDefinition.Method(mSpec);
+		
+		// Act
+		List<String> result = ddMethod.actualRisks()
+				.locations()
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(mName, result.get(0));
+	}
+	
+	@Test
+	void givenOverloadingMethodWithDifferentNrParams_whenDetectMethod_thenNoRisk() {
+		// Arrange
+		String clsName = "ClassA";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		String mName = "methodA2";
+		AccessModifier mAccess = AccessModifier.PRIVATE;
+		String rtnType = "int";
+		Map<String, String> params = Map.of("p1A2", "int");
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
+		
+		List<ParameterSpecification> paramSpecs = params.entrySet()
+				.stream()
+				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
+				.toList();
+		
+		MethodSpecification mSpec = new MethodSpecification(
+				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
+		DoubleDefinition.Method ddMethod = new DoubleDefinition.Method(mSpec);
+		
+		// Act
+		List<String> result = ddMethod.actualRisks()
+				.locations()
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(0, result.size());
+	}
+	
+	@Test
+	void givenOverloadingMethodWithSameNrParams_whenDetectMethod_thenNoRisk() {
+		// Arrange
+		String clsName = "ClassA";
+		AccessModifier clsAccess = AccessModifier.PUBLIC;
+		String mName = "methodA2";
+		AccessModifier mAccess = AccessModifier.PRIVATE;
+		String rtnType = "int";
+		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "int");
+		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
+		
+		List<ParameterSpecification> paramSpecs = params.entrySet()
+				.stream()
+				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
+				.toList();
+		
+		MethodSpecification mSpec = new MethodSpecification(
+				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
+		DoubleDefinition.Method ddMethod = new DoubleDefinition.Method(mSpec);
+		
+		// Act
+		List<String> result = ddMethod.actualRisks()
+				.locations()
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(0, result.size());
+	}
 	
 	@AfterEach
 	void tearDown() { }
