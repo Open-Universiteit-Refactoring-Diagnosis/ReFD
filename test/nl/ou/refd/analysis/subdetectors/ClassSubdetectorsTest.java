@@ -23,6 +23,7 @@ import com.ensoftcorp.atlas.core.indexing.IndexStatus;
 import com.ensoftcorp.atlas.core.indexing.IndexStatusUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AbstractClasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AllSuperClasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DirectSuperClasses;
@@ -68,7 +69,7 @@ public class ClassSubdetectorsTest {
 	void init() { }
 	
 	@Test
-	void givenExistingClassName_whenDetectClassesByName_thenReturnOneLocationWithSameName() {	
+	void givenExistingClassName_whenDetectClassesByName_thenReturnClassName() {	
 		// Arrange
 		String name = "ClassANoSuper";
 		ClassesByName clsByName = new ClassesByName(name);
@@ -98,7 +99,109 @@ public class ClassSubdetectorsTest {
 	}
 	
 	@Test
-	void givenClassWithSuper_whenDetectDirectSuperClasses_thenReturnOneLocationOfDirectSuper() {
+	void givenAbstractClassName_whenDetectClassesByName_thenReturnAbstractClass() {
+		// Arrange
+		String name = "AbstractClassE";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenInterfaceName_whenDetectClassesByName_thenReturnInterface() {
+		// Arrange
+		String name = "InterfaceF";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenPublicInnerClassName_whenDetectClassesByName_thenReturnInnerClass() {
+		// Arrange
+		String name = "InnerClassI1";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenPrivateInnerClassName_whenDetectClassesByName_thenReturnInnerClass() {
+		// Arrange
+		String name = "InnerClassI2";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenPublicStaticNestedClassName_whenDetectClassesByName_thenReturnStaticNestedClass() {
+		// Arrange
+		String name = "StaticNestedClassI3";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenPrivateStaticNestedClassName_whenDetectClassesByName_thenReturnStaticNestedClass() {
+		// Arrange
+		String name = "StaticNestedClassI4";
+		ClassesByName clsByName = new ClassesByName(name);
+		
+		// Act
+		List<String> result = clsByName.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(name, result.get(0));
+	}
+	
+	@Test
+	void givenClassWithSuper_whenDetectDirectSuperClasses_thenReturnDirectSuperOnly() {
 		// Arrange
 		String subName = "ClassCExtendsB";
 		String superName = "ClassBExtendsA";
@@ -120,6 +223,24 @@ public class ClassSubdetectorsTest {
 	void givenClassWithoutSuper_whenDetectDirectSuperClasses_thenReturnObject() {
 		// Arrange
 		String name = "ClassANoSuper";
+		Set<ProgramLocation> cls = new ClassesByName(name).applyOn(querySpace);
+		DirectSuperClasses superCls = new DirectSuperClasses();
+		
+		// Act
+		List<String> result = superCls.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(1,  result.size());
+		Assertions.assertEquals("Object", result.get(0));
+	}
+	
+	@Test
+	void givenClassNoSuperWithInterface_whenDetectDirectSuperClasses_thenReturnObject() {
+		// Arrange
+		String name = "ClassGImplementsF";
 		Set<ProgramLocation> cls = new ClassesByName(name).applyOn(querySpace);
 		DirectSuperClasses superCls = new DirectSuperClasses();
 		
@@ -207,6 +328,80 @@ public class ClassSubdetectorsTest {
 		// Assert
 		Assertions.assertEquals(3, result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
+	}
+	
+	@Test
+	void givenClassWithAbstractMethods_whenDetectMethods_thenReturnAllClassMethods() {
+		// Arrange
+		String clsName = "AbstractClassE";
+		List<String> methodNames = List.of("abstractMethodE1", "methodE2", "methodE3");
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		Methods methods = new Methods();
+		
+		// Act
+		List<String> result = methods.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(methodNames.containsAll(result));
+	}
+	
+	@Test
+	void givenInterfaceWithMethods_whenDetectMethods_thenReturnAllInterfaceMethods() {
+		// Arrange
+		String iName = "InterfaceF";
+		List<String> methodNames = List.of("iMethodF1", "iMethodF2", "iMethodF3");
+		Set<ProgramLocation> cls = new ClassesByName(iName).applyOn(querySpace);
+		Methods methods = new Methods();
+		
+		// Act
+		List<String> result = methods.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(methodNames.containsAll(result));
+	}
+	
+	@Test
+	void givenClassWithSuperMethods_whenDetectMethods_thenReturnClassMethodsOnly() {
+		// Arrange
+		String clsName = "ClassBExtendsA";
+		List<String> methodNames = List.of("methodB1", "methodB2", "methodB3");
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		Methods methods = new Methods();
+		
+		// Act
+		List<String> result = methods.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(methodNames.containsAll(result));
+	}
+	
+	@Test
+	void givenMultipleAbstractClasses_whenDetectAbstractClasses_thenReturnAllAbstractClasses() {
+		// Arrange
+		List<String> clsNames = List.of("AbstractClassE", "AbstractClassH");
+		AbstractClasses cls = new AbstractClasses();
+		
+		// Act
+		List<String> result = cls.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(2, result.size());
+		Assertions.assertTrue(clsNames.containsAll(result));
 	}
 	
 	@AfterEach
