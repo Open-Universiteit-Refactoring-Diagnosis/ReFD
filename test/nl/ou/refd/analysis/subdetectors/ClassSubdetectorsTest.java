@@ -172,10 +172,29 @@ public class ClassSubdetectorsTest {
 	}
 	
 	@Test
-	void givenClassWithPublicAndPrivateMethods_whenDetectMethods_thenReturnAllClassMethods() {
+	void givenClassWithPublicProtectedPrivateMethods_whenDetectMethods_thenReturnAllClassMethods() {
 		// Arrange
 		String clsName = "ClassANoSuper";
-		List<String> methodNames = List.of("MethodA1", "MethodA2", "MethodA3");
+		List<String> methodNames = List.of("methodA1", "methodA2", "methodA3");
+		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
+		Methods methods = new Methods();
+		
+		// Act
+		List<String> result = methods.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(3, result.size());
+		Assertions.assertTrue(methodNames.containsAll(result));
+	}
+	
+	@Test
+	void givenClassWithStaticMethods_whenDetectMethods_thenReturnAllClassMethods() {
+		// Arrange
+		String clsName = "ClassDNoSuper";
+		List<String> methodNames = List.of("staticMethodD1", "staticMethodD2", "methodD3");
 		Set<ProgramLocation> cls = new ClassesByName(clsName).applyOn(querySpace);
 		Methods methods = new Methods();
 		
