@@ -76,4 +76,26 @@ public final class BrokenLocalReferences {
 		
 	}
 	
+	public static class Field extends Detector<InstructionSet> {
+		
+		private final ClassSpecification context;
+		
+		public Field(ClassSpecification enclosingClass) {
+			this.context = enclosingClass;
+		}
+
+		@Override
+		public InstructionSet actualRisks() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void accept(DetectorVisitor visitor) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 }
