@@ -78,12 +78,19 @@ public final class BrokenLocalReferences {
 		
 	}
 	
+	/**
+	 * Class representing a BrokenLocalReferences detector for a specific field. 
+	 */
 	public static class Field extends Detector<InstructionSet> {
 		
-		private final FieldSpecification renamedField;
+		private final FieldSpecification subject;
 		
-		public Field(FieldSpecification renamedField) {
-			this.renamedField = renamedField;
+		/**
+		 * Creates the detector with a FieldSpecification for the field
+		 * @param subject the field in question
+		 */
+		public Field(FieldSpecification subject) {
+			this.subject = subject;
 		}
 
 		@Override
@@ -91,9 +98,9 @@ public final class BrokenLocalReferences {
 			return new ProgramComponentsGenerator()
 					.stream()
 					.classes()
-					.classesByName(renamedField.getEnclosingClass().getClassName())
+					.classesByName(subject.getEnclosingClass().getClassName())
 					.fields()
-					.filterByName(renamedField.getFieldName())
+					.filterByName(subject.getFieldName())
 					.fieldsCalledAt()
 					.collect();
 		}
