@@ -2,6 +2,7 @@ package nl.ou.refd.analysis.refactorings;
 
 import nl.ou.refd.analysis.DangerAggregator;
 import nl.ou.refd.analysis.VerdictFunction;
+import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
 import nl.ou.refd.analysis.detectors.DoubleDefinition;
 import nl.ou.refd.analysis.microsteps.RenameFieldComposite;
 import nl.ou.refd.locations.specifications.FieldSpecification;
@@ -25,7 +26,13 @@ public class RenameField extends Refactoring {
 	public VerdictFunction verdictFunction(DangerAggregator aggregator) {
 		return new VerdictFunction(aggregator) {
 			
+			@Override
 			public void visit(DoubleDefinition.Field detector) {
+				all(detector);
+			}
+			
+			@Override
+			public void visit(BrokenLocalReferences.Field detector) {
 				all(detector);
 			}
 		};
