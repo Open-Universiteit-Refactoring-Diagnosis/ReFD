@@ -81,11 +81,9 @@ public final class BrokenLocalReferences {
 	public static class Field extends Detector<InstructionSet> {
 		
 		private final FieldSpecification renamedField;
-		private final ClassSpecification context;
 		
-		public Field(FieldSpecification renamedField, ClassSpecification enclosingClass) {
+		public Field(FieldSpecification renamedField) {
 			this.renamedField = renamedField;
-			this.context = enclosingClass;
 		}
 
 		@Override
@@ -93,7 +91,7 @@ public final class BrokenLocalReferences {
 			return new ProgramComponentsGenerator()
 					.stream()
 					.classes()
-					.classesByName(context.getClassName())
+					.classesByName(renamedField.getEnclosingClass().getClassName())
 					.fields()
 					.filterByName(renamedField.getFieldName())
 					.fieldsCalledAt()
@@ -102,8 +100,7 @@ public final class BrokenLocalReferences {
 
 		@Override
 		public void accept(DetectorVisitor visitor) {
-			// TODO Auto-generated method stub
-			
+			visitor.visit(this);			
 		}
 		
 	}
