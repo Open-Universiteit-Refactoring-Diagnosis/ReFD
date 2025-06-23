@@ -28,10 +28,6 @@ public class RenameFieldComposite extends CompositeMicrostep {
 	public RenameFieldComposite(FieldSpecification target, FieldSpecification newName) {
 		
 		potentialRisk(new DoubleDefinition.Field(newName));
-		
-		ProgramComponentsGenerator pcg = new ProgramComponentsGenerator();
-		InstructionSet iset = new InstructionSet(pcg.generate());
-		InstructionStream istream = new InstructionStream(iset);
 		potentialRisk(new BrokenLocalReferences.Field(target.getEnclosingClass()));
 		
 		compositeMicrostep(new RemoveField(target.getEnclosingClass()));
