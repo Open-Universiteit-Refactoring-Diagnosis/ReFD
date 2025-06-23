@@ -113,7 +113,6 @@ public static class Field extends Detector<FieldSet> {
 		 */
 		@Override
 		public FieldSet actualRisks() {
-			System.out.println("FIELD NAME: " + subject.getFieldName());
 			return new ProgramComponentsGenerator()
 					.stream()
 					.classes()
