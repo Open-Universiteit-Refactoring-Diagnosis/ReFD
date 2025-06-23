@@ -3,6 +3,7 @@ package nl.ou.refd.analysis.detectors;
 import nl.ou.refd.analysis.DetectorVisitor;
 import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.collections.InstructionSet;
+import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.streams.ClassStream;
 import nl.ou.refd.locations.streams.InstructionStream;
@@ -86,8 +87,13 @@ public final class BrokenLocalReferences {
 
 		@Override
 		public InstructionSet actualRisks() {
-			// TODO Auto-generated method stub
-			return null;
+			return new ProgramComponentsGenerator()
+					.stream()
+					.classes()
+					.classesByName(context.getClassName())
+					.fields()
+					.fieldsCalledAt()
+					.collect();
 		}
 
 		@Override

@@ -32,7 +32,7 @@ public class RenameFieldComposite extends CompositeMicrostep {
 		ProgramComponentsGenerator pcg = new ProgramComponentsGenerator();
 		InstructionSet iset = new InstructionSet(pcg.generate());
 		InstructionStream istream = new InstructionStream(iset);
-		potentialRisk(new BrokenLocalReferences.Body(istream, target.getEnclosingClass()));
+		potentialRisk(new BrokenLocalReferences.Field(target.getEnclosingClass()));
 		
 		compositeMicrostep(new RemoveField(target.getEnclosingClass()));
 		compositeMicrostep(new AddField(newName));		
