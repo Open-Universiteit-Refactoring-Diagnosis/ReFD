@@ -5,6 +5,7 @@ import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.collections.InstructionSet;
 import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.ClassSpecification;
+import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.locations.streams.ClassStream;
 import nl.ou.refd.locations.streams.InstructionStream;
 
@@ -79,9 +80,11 @@ public final class BrokenLocalReferences {
 	
 	public static class Field extends Detector<InstructionSet> {
 		
+		private final FieldSpecification renamedField;
 		private final ClassSpecification context;
 		
-		public Field(ClassSpecification enclosingClass) {
+		public Field(FieldSpecification renamedField, ClassSpecification enclosingClass) {
+			this.renamedField = renamedField;
 			this.context = enclosingClass;
 		}
 
@@ -92,6 +95,7 @@ public final class BrokenLocalReferences {
 					.classes()
 					.classesByName(context.getClassName())
 					.fields()
+					.filterByName(renamedField.getFieldName())
 					.fieldsCalledAt()
 					.collect();
 		}
