@@ -74,14 +74,10 @@ public class RenameFieldButton extends MenuButtonHandler {
 			return;
 		}
 		
-		String newFieldString = DisplayUtils.promptString("Rename field", "Please provide the new name for the field (name, visibility)");
-		String[] rawStrings = newFieldString.split(",");
-		String[] splitFieldString = new String[2];
-		for (int i=0; i<splitFieldString.length; i++)	{
-			splitFieldString[i] = rawStrings[i].strip();
-		}
+		String newFieldName = DisplayUtils.promptString("Rename field", "Please enter the new name for the field:");
+		newFieldName = newFieldName.strip();
 		
-		FieldSpecification newFieldSpecification = new FieldSpecification(splitFieldString[0], fieldSource.getEnclosingClass(), AccessModifier.fromString(splitFieldString[1]), fieldSource.isStatic());
+		FieldSpecification newFieldSpecification = new FieldSpecification(newFieldName, fieldSource.getEnclosingClass(), fieldSource.getVisibility(), fieldSource.isStatic());
 		
 		try {
 			Controller.getController().renameField(fieldSource, newFieldSpecification);
