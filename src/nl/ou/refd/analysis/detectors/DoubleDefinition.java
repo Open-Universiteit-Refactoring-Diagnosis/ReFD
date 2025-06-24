@@ -15,16 +15,16 @@ import nl.ou.refd.locations.specifications.MethodSpecification;
  */
 public final class DoubleDefinition {
 	private DoubleDefinition(){}
-	
+
 	/**
 	 * Class representing a DoubleDefinition detector for a class.
 	 * A detector checks the program graph for potential risks. If it finds
 	 * these, they are determined to be actual risks.
 	 */
 	public static class Class extends Detector<ClassSet> {
-		
+
 		private final ClassSpecification subject;
-		
+
 		/**
 		 * Creates the detector with its context.
 		 * @param subject the context
@@ -32,7 +32,7 @@ public final class DoubleDefinition {
 		public Class(ClassSpecification subject) {
 			this.subject = subject;
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -52,18 +52,18 @@ public final class DoubleDefinition {
 		public void accept(DetectorVisitor visitor) {
 			visitor.visit(this);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Class representing a DoubleDefinition detector for a method.
 	 * A detector checks the program graph for potential risks. If it finds
 	 * these, they are determined to be actual risks.
 	 */
 	public static class Method extends Detector<MethodSet> {
-		
+
 		private final MethodSpecification subject;
-		
+
 		/**
 		 * Creates the detector with its context.
 		 * @param subject the context
@@ -71,7 +71,7 @@ public final class DoubleDefinition {
 		public Method(MethodSpecification subject) {
 			this.subject = subject;
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -93,13 +93,15 @@ public final class DoubleDefinition {
 		public void accept(DetectorVisitor visitor) {
 			visitor.visit(this);
 		}
-		
 	}
-	
-public static class Field extends Detector<FieldSet> {
-		
+
+	/**
+	 * Class representing a DoubleDefinition detector for a field.
+	 */
+	public static class Field extends Detector<FieldSet> {
+
 		private final FieldSpecification subject;
-		
+
 		/**
 		 * Creates the detector with its context.
 		 * @param subject the context
@@ -107,7 +109,7 @@ public static class Field extends Detector<FieldSet> {
 		public Field(FieldSpecification subject) {
 			this.subject = subject;
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -129,7 +131,7 @@ public static class Field extends Detector<FieldSet> {
 		public void accept(DetectorVisitor visitor) {
 			visitor.visit(this);
 		}
-		
+
 	}
-	
+
 }

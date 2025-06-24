@@ -11,10 +11,17 @@ import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.locations.streams.InstructionStream;
 
+/**
+ * Class representing a Remove Field microstep
+ */
 public class RemoveField extends Microstep {
 	
 	private final FieldSpecification fieldToRemove;
 	
+	/**
+	 * Create the Remove Field microstep.
+	 * @param fieldToRemove a FieldSpecification of the field to be removed
+	 */
 	public RemoveField(FieldSpecification fieldToRemove) {
 		this.fieldToRemove = fieldToRemove;
 		potentialRisk(new BrokenLocalReferences.Field(fieldToRemove));

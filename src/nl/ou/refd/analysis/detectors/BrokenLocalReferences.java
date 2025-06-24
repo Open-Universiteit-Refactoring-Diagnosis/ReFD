@@ -79,7 +79,9 @@ public final class BrokenLocalReferences {
 	}
 	
 	/**
-	 * Class representing a BrokenLocalReferences detector for a specific field. 
+	 * Class representing a BrokenLocalReferences detector for a specific field.
+	 * 
+	 * TODO: validate that the scope of this detector is correct
 	 */
 	public static class Field extends Detector<InstructionSet> {
 		

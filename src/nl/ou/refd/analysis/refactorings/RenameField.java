@@ -14,10 +14,10 @@ import nl.ou.refd.locations.specifications.FieldSpecification;
 public class RenameField extends Refactoring {
 	
 	/**
-	 * Creates the Rename Field refactoring with the target field to rename
-	 * and the replacement field that it should be renamed to.
+	 * Creates the Rename Field refactoring with the target field to be renamed
+	 * and the replacement that it should be renamed to.
 	 * @param target field that should be renamed
-	 * @param replacment the field that the target should be renamed to
+	 * @param replacement the field that the target should be renamed to
 	 */	
 	public RenameField(FieldSpecification target, FieldSpecification replacement) {
 		microstep(new RenameFieldComposite(target, replacement));

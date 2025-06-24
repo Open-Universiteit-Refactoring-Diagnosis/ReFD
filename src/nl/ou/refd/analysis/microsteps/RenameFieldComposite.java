@@ -16,7 +16,7 @@ import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 /**
  * Class representing a Rename Field microstep (a composite microstep).
  * This class is named RenameFieldComposite to avoid confusion with the
- * RenameField refactoring it supports.
+ * RenameField Refactoring that it supports.
  */
 public class RenameFieldComposite extends CompositeMicrostep {
 	

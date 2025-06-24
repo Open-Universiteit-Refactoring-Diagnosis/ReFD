@@ -26,9 +26,8 @@ import nl.ou.refd.plugin.Controller;
 import nl.ou.refd.plugin.ui.EclipseUtil;
 
 /**
- * Class representing the menu button for the Combine Methods into Class
- * refactoring option. The presence of this button can be configured in
- * plugin.xml.
+ * Class representing the menu button for the Rename Field refactoring 
+ * option. The presence of this button can be configured in plugin.xml.
  */
 public class RenameFieldButton extends MenuButtonHandler {
 
@@ -74,6 +73,7 @@ public class RenameFieldButton extends MenuButtonHandler {
 			return;
 		}
 		
+		// User only needs to provide the new field's name, remaining specification can be copied over from the source field.
 		String newFieldName = DisplayUtils.promptString("Rename field", "Please enter the new name for the field:");
 		newFieldName = newFieldName.strip();
 		
