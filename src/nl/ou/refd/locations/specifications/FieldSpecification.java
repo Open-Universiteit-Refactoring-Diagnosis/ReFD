@@ -1,13 +1,9 @@
 package nl.ou.refd.locations.specifications;
 
-import org.apache.commons.lang3.NotImplementedException;
-
-
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
-import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
 
 /**
  * Class representing a specification of a single field location

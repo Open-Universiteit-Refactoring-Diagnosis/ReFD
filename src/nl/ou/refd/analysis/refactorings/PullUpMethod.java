@@ -2,7 +2,6 @@ package nl.ou.refd.analysis.refactorings;
 
 import nl.ou.refd.analysis.DangerAggregator;
 import nl.ou.refd.analysis.VerdictFunction;
-import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
 import nl.ou.refd.analysis.detectors.CorrespondingSubclassSpecification;
 import nl.ou.refd.analysis.detectors.LostSpecification;
 import nl.ou.refd.analysis.detectors.MissingAbstractImplementation;
@@ -14,8 +13,6 @@ import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.collections.MethodSet;
 import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
-import nl.ou.refd.locations.streams.ClassStream;
-import nl.ou.refd.locations.streams.InstructionStream;
 
 /**
  * Class representing a Pull Up Method refactoring. This refactoring can be analyzed by

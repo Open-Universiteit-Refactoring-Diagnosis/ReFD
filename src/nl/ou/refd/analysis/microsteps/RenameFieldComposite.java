@@ -3,15 +3,7 @@ package nl.ou.refd.analysis.microsteps;
 import nl.ou.refd.analysis.ModelVisitor;
 import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
 import nl.ou.refd.analysis.detectors.DoubleDefinition;
-import nl.ou.refd.analysis.detectors.DoubleDefinition.Field;
-import nl.ou.refd.locations.collections.FieldSet;
-import nl.ou.refd.locations.collections.InstructionSet;
-import nl.ou.refd.locations.collections.LocationSet;
 import nl.ou.refd.locations.specifications.FieldSpecification;
-import nl.ou.refd.locations.streams.FieldStream;
-import nl.ou.refd.locations.streams.InstructionStream;
-import nl.ou.refd.locations.generators.LocationGenerator;
-import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 
 /**
  * Class representing a Rename Field microstep (a composite microstep).

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
-import nl.ou.refd.analysis.detectors.BrokenLocalReferences.Field;
 import nl.ou.refd.analysis.detectors.BrokenSubTyping;
 import nl.ou.refd.analysis.detectors.CorrespondingSubclassSpecification;
 import nl.ou.refd.analysis.detectors.Detector;
