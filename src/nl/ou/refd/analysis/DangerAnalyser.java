@@ -115,7 +115,7 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	}
 	
 	@Override
-	public void visit(Field detector) {
+	public void visit(BrokenLocalReferences.Field detector) {
 		handleDetector(detector);		
 	}
 	
