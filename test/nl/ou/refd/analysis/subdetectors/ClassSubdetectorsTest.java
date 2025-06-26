@@ -2,14 +2,9 @@ package nl.ou.refd.analysis.subdetectors;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-
-import org.awaitility.Awaitility;
-import org.awaitility.core.ConditionTimeoutException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -17,11 +12,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
-import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
-import com.ensoftcorp.atlas.core.indexing.IndexStatus;
-import com.ensoftcorp.atlas.core.indexing.IndexStatusUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
+import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
 
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AbstractClasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AllSuperClasses;
@@ -32,11 +27,11 @@ import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
 
+@Execution(SAME_THREAD)
 public class ClassSubdetectorsTest {
 
 	static final String TEST_PROJECT_NAME = "ReFDTestProject";
 	static final String TEST_PACKAGE_NAME = "nl.ou.refd.test.analysis.subdetectors.classes";
-	static final long MAPPING_TIMEOUT = 10;
 	
 	private static Set<ProgramLocation> querySpace = null;
 	
@@ -46,23 +41,18 @@ public class ClassSubdetectorsTest {
 		IProject project = root.getProject(TEST_PROJECT_NAME);
 
 		try {
-			ProjectImporterUtil.mapProject(project);
-			Awaitility.await()
-				.atMost(MAPPING_TIMEOUT, TimeUnit.SECONDS)
-				.until( () -> IndexStatusUtil.getIndexStatus().equals(IndexStatus.READY));
-			
-			querySpace = Graph.query()
-						.universe()
-						.relations(Tags.Relation.EDGE)
-						.forward(Graph.query()
-								.universe()
-								.pkg(TEST_PACKAGE_NAME))
-						.locations();
+			ProjectImporterUtil.mapProject(project);  // Blocking
 		} catch (AtlasLicenseException e) {
 			System.out.println("Atlas Indexing failed. No valid license");
-		} catch (ConditionTimeoutException e) {
-			System.out.println("Atlas Indexing failed. Timeout occured");
-		}	
+		}
+		
+		querySpace = Graph.query()
+			.universe()
+			.relations(Tags.Relation.EDGE)
+			.forward(Graph.query()
+				.universe()
+				.pkg(TEST_PACKAGE_NAME))
+			.locations();	
 	}
 	
 	@BeforeEach

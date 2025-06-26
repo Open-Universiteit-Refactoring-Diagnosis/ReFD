@@ -1,11 +1,7 @@
 package nl.ou.refd.analysis.detectors;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import org.awaitility.Awaitility;
-import org.awaitility.core.ConditionTimeoutException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -15,9 +11,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
-import com.ensoftcorp.atlas.core.indexing.IndexStatus;
-import com.ensoftcorp.atlas.core.indexing.IndexStatusUtil;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
 
@@ -29,29 +25,23 @@ import nl.ou.refd.locations.specifications.MethodSpecification;
 import nl.ou.refd.locations.specifications.PackageSpecification;
 import nl.ou.refd.locations.specifications.ParameterSpecification;
 
+@Execution(SAME_THREAD)
 public class DoubleDefinitionTest {
 
 	static final String TEST_PROJECT_NAME = "ReFDTestProject";
 	static final String TEST_PACKAGE_NAME = "nl.ou.refd.test.analysis.detectors.doubledefinition";
-	static final long MAPPING_TIMEOUT = 20;
 	
 	private final static PackageSpecification pkg = new PackageSpecification(TEST_PACKAGE_NAME);
 	
 	@BeforeAll
-	static void initAll() {
+	static void initAll() { 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(TEST_PROJECT_NAME);
 
 		try {
-			ProjectImporterUtil.mapProject(project);
-			Awaitility.await()
-				.atMost(MAPPING_TIMEOUT, TimeUnit.SECONDS)
-				.until( () -> IndexStatusUtil.getIndexStatus().equals(IndexStatus.READY));
-
+			ProjectImporterUtil.mapProject(project);  // Blocking
 		} catch (AtlasLicenseException e) {
 			System.out.println("Atlas Indexing failed. No valid license");
-		} catch (ConditionTimeoutException e) {
-			System.out.println("Atlas Indexing failed. Timeout occured");
 		}
 	}
 	
@@ -137,14 +127,11 @@ public class DoubleDefinitionTest {
 		String mName = "methodA2";
 		AccessModifier mAccess = AccessModifier.PRIVATE;
 		String rtnType = "int";
-		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "long");
-		
+		List<ParameterSpecification> paramSpecs = List.of(
+				new ParameterSpecification("p1A2", "int"),
+				new ParameterSpecification("p2A2", "long")
+		);
 		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
-		
-		List<ParameterSpecification> paramSpecs = params.entrySet()
-				.stream()
-				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
-				.toList();
 		
 		MethodSpecification mSpec = new MethodSpecification(
 				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
@@ -170,13 +157,11 @@ public class DoubleDefinitionTest {
 		String mName = "methodA2";
 		AccessModifier mAccess = AccessModifier.PRIVATE;
 		String rtnType = "boolean";
-		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "long");
+		List<ParameterSpecification> paramSpecs = List.of(
+				new ParameterSpecification("p1A2", "int"),
+				new ParameterSpecification("p2A2", "long")
+		);
 		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
-		
-		List<ParameterSpecification> paramSpecs = params.entrySet()
-				.stream()
-				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
-				.toList();
 		
 		MethodSpecification mSpec = new MethodSpecification(
 				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
@@ -202,13 +187,10 @@ public class DoubleDefinitionTest {
 		String mName = "methodA2";
 		AccessModifier mAccess = AccessModifier.PRIVATE;
 		String rtnType = "int";
-		Map<String, String> params = Map.of("p1A2", "int");
+		List<ParameterSpecification> paramSpecs = List.of(
+				new ParameterSpecification("p1A2", "int")
+		);
 		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
-		
-		List<ParameterSpecification> paramSpecs = params.entrySet()
-				.stream()
-				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
-				.toList();
 		
 		MethodSpecification mSpec = new MethodSpecification(
 				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
@@ -233,13 +215,11 @@ public class DoubleDefinitionTest {
 		String mName = "methodA2";
 		AccessModifier mAccess = AccessModifier.PRIVATE;
 		String rtnType = "int";
-		Map<String, String> params = Map.of("p1A2", "int", "p2A2", "int");
+		List<ParameterSpecification> paramSpecs = List.of(
+				new ParameterSpecification("p1A2", "int"),
+				new ParameterSpecification("p2A2", "int")
+		);
 		ClassSpecification clsSpec = new ClassSpecification(clsName, clsAccess, pkg);
-		
-		List<ParameterSpecification> paramSpecs = params.entrySet()
-				.stream()
-				.map(p -> new ParameterSpecification(p.getKey(), p.getValue()))
-				.toList();
 		
 		MethodSpecification mSpec = new MethodSpecification(
 				mName, paramSpecs, mAccess, false, false, rtnType, clsSpec);
