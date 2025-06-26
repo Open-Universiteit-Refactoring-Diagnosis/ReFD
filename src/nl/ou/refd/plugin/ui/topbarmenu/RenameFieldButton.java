@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IProject;
 import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import com.ensoftcorp.open.commons.utilities.MappingUtils;
 
+import nl.ou.refd.exceptions.LocationSetException;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
@@ -27,22 +28,26 @@ public class RenameFieldButton extends MenuButtonHandler {
 	public void handle(ExecutionEvent event) {
 		
 		// get the field selected by the user
-		GraphQuery selectedElement = SelectionUtil.getSelection().locations(Tags.ProgramLocation.INSTANCE_VARIABLE);;
+		GraphQuery selectedElement = SelectionUtil.getSelection().locations(Tags.ProgramLocation.INSTANCE_VARIABLE);
 		
-		if (selectedElement.locationCount() < 1) {
-			DisplayUtils.showMessage("Error: No selection made");
-			return;
-		}
-		
-		ProgramLocation location = selectedElement.singleLocation();
-		
+		ProgramLocation location = null;
 		FieldSpecification fieldSource = null;
 		
-		if (FieldSpecification.locationIsField(location)) {
-			fieldSource = new FieldSpecification(location);
+		// try to extract a single location from the GraphQuery. If this fails, either no selection was made
+		// or the selection wasn't a field as selecting a class or method always yields more than a single
+		// location. To be sure that no non-fields slip through, we also explicitly check if the selection is a field.
+		try {
+			location = selectedElement.singleLocation();
+			if (FieldSpecification.locationIsField(location)) {
+				fieldSource = new FieldSpecification(location);
+			}
+			else {
+				DisplayUtils.showMessage("Error: selection wasn't a field");
+				return;
+			}
 		}
-		else {
-			DisplayUtils.showMessage("Error: Selection was not a field");
+		catch (LocationSetException e) {
+			DisplayUtils.showMessage("Error: couldn't trace your selection to a single field. Either nothing was selected or you didn't select a field.");
 			return;
 		}
 		
@@ -53,19 +58,10 @@ public class RenameFieldButton extends MenuButtonHandler {
 			e.printStackTrace();
 		}
 		
-		IProject currentProject;
-		
-		try {
-			currentProject = EclipseUtil.currentProject();
-		} catch (NoActiveProjectException e) {
-			DisplayUtils.showMessage("Error: No active project");
-			return;
-		}
-		
 		// User only needs to provide the new field's name, remaining specification can be copied over from the source field.
 		String newFieldName = DisplayUtils.promptString("Rename field", "Please enter the new name for the field:");
 		if (newFieldName == null || newFieldName.isEmpty()) {
-			DisplayUtils.showMessage("Warning: received a null or empty field name. The new field name cannot be empty. Refactoring analysis will be aborted");
+			DisplayUtils.showMessage("Warning: received a null or empty field name. The new field name cannot be empty. Refactoring analysis will not be performed");
 			return;
 		}
 		else {
