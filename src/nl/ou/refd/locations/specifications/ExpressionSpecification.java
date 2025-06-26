@@ -19,8 +19,8 @@ public class ExpressionSpecification extends LocationSpecification {
 	}
 	
 	public ExpressionSpecification(ProgramLocation location) {
-		if (!locationIsExpression(location))
-			throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.DATA_FLOW");
+//		if (!locationIsExpression(location))
+//			throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.DATA_FLOW");
 		//this.enclosingExpression = new ExpressionSpecification(Graph.query(location).parent().singleLocation()); //Error: is a CONTROL_FLOW_NODE
 		this.expression = location.<String>getAttribute(Tags.Attributes.NAME);
 		this.enclosingMethod = new MethodSpecification(Graph.query(location)

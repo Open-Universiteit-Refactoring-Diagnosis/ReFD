@@ -17,6 +17,7 @@ public final class VariableSubdetectors {
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
 			
 			return Graph.query(locations)
+					.forwardDifference(Tags.Relation.DECLARES)
 					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
 					.locations();
 		}

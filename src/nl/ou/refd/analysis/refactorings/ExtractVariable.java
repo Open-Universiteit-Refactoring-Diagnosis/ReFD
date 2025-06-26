@@ -18,8 +18,8 @@ public class ExtractVariable extends Refactoring {
 
 	@Override
 	public VerdictFunction verdictFunction(DangerAggregator aggregator) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new VerdictFunction(aggregator) {};
 	}
 
 }

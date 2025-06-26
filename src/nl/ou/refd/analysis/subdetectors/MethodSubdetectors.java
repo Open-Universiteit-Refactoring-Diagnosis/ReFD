@@ -612,7 +612,12 @@ public final class MethodSubdetectors {
 		 */
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
-			return Graph.query(locations).locations(Tags.ProgramLocation.VARIABLE).locations();
+			return Graph.query(locations)
+					.forwardOn(Graph.query()
+							.universe()
+							.relations(Tags.Relation.DECLARES))
+					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
+					.locations();
 		}
 	}
 	

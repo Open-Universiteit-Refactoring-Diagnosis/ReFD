@@ -6,6 +6,7 @@ import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.SelectionUtil;
+import nl.ou.refd.locations.graph.Tags;
 import nl.ou.refd.locations.specifications.ExpressionSpecification;
 import nl.ou.refd.locations.specifications.VariableSpecification;
 import nl.ou.refd.plugin.Controller;
@@ -28,13 +29,13 @@ public class ExtractVariableButton extends MenuButtonHandler {
 			return;
 		}
 		
-		ProgramLocation location = selectedElement.singleLocation();
+		ProgramLocation location = selectedElement.locations().iterator().next();
 		
 		ExpressionSpecification expressionSource = null;
 		
 		// TODO: can't directly select expression with multiple operators and operands in Atlas
 //		if (ExpressionSpecification.locationIsExpression(location)) {
-//			expressionSource = new ExpressionSpecification(location);
+			expressionSource = new ExpressionSpecification(location);
 //		}
 //		else {
 //			DisplayUtils.showMessage("Error: Selection was not an expression");

@@ -107,7 +107,7 @@ public class Controller extends AbstractUIPlugin {
 			@Override
 			public void run() {
 				ExtractVariable refactoring = new ExtractVariable(target, destination);
-				//TODO: implement danger analyser
+				new DangerAnalyser(refactoring).analyse().forEach(danger -> danger.mark(new MarkerCreator(project)::defaultMarker));
 			}
 		}).start();
 		
