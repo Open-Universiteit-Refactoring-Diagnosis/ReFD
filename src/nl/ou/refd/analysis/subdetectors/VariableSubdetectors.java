@@ -2,6 +2,8 @@ package nl.ou.refd.analysis.subdetectors;
 
 import java.util.Set;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
@@ -14,7 +16,9 @@ public final class VariableSubdetectors {
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
 			
-			return Graph.query(locations).locations(Tags.ProgramLocation.VARIABLE).locations();
+			return Graph.query(locations)
+					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
+					.locations();
 		}
 		
 	}
@@ -51,7 +55,7 @@ public final class VariableSubdetectors {
 		 */
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
-			return Graph.query(locations).parent().locations();
+			throw new NotImplementedException();
 		}
 	}
 
