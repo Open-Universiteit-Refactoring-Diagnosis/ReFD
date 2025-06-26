@@ -9,6 +9,7 @@ import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.SelectionUtil;
+import nl.ou.refd.locations.graph.Tags;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.plugin.Controller;
 import nl.ou.refd.plugin.ui.EclipseUtil;
@@ -26,7 +27,7 @@ public class RenameFieldButton extends MenuButtonHandler {
 	public void handle(ExecutionEvent event) {
 		
 		// get the field selected by the user
-		GraphQuery selectedElement = SelectionUtil.getSelection();
+		GraphQuery selectedElement = SelectionUtil.getSelection().locations(Tags.ProgramLocation.INSTANCE_VARIABLE);;
 		
 		if (selectedElement.locationCount() < 1) {
 			DisplayUtils.showMessage("Error: No selection made");
@@ -63,7 +64,13 @@ public class RenameFieldButton extends MenuButtonHandler {
 		
 		// User only needs to provide the new field's name, remaining specification can be copied over from the source field.
 		String newFieldName = DisplayUtils.promptString("Rename field", "Please enter the new name for the field:");
-		newFieldName = newFieldName.strip();
+		if (newFieldName == null || newFieldName.isEmpty()) {
+			DisplayUtils.showMessage("Warning: received a null or empty field name. The new field name cannot be empty. Refactoring analysis will be aborted");
+			return;
+		}
+		else {
+			newFieldName = newFieldName.strip();
+		}		
 		
 		FieldSpecification newFieldSpecification = new FieldSpecification(newFieldName, fieldSource.getEnclosingClass(), fieldSource.getVisibility(), fieldSource.isStatic());
 		
