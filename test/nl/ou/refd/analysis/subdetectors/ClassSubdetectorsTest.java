@@ -523,6 +523,8 @@ public class ClassSubdetectorsTest {
 	}
 	
 	/**
+	 * Graph of class hierarchy to test on. 
+	 * 
 	 *           K
 	 *         /   \
 	 *       (a)L   P
@@ -530,6 +532,9 @@ public class ClassSubdetectorsTest {
 	 *    (a)M   O
 	 *      |
 	 *      N 
+	 *      
+	 * FIXME Unclear what the subdetector has to do. Description is different then the applied query.
+	 * Test fails. Does not return N, O, P as expected.
 	 */
 	@Test
 	void givenClassWithDeeperAbstractSubs_whenDetectFirstConcreteSubclasses_thenReturnConcreteSubOnly() {
