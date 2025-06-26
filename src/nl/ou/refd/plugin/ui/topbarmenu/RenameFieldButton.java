@@ -35,7 +35,7 @@ public class RenameFieldButton extends MenuButtonHandler {
 		
 		// try to extract a single location from the GraphQuery. If this fails, either no selection was made
 		// or the selection wasn't a field as selecting a class or method always yields more than a single
-		// location. To be sure that no non-fields slip through, we also explicitly check if the selection is a field.
+		// location. To be sure that no non-fields slip through, also explicitly check if the selection is a field.
 		try {
 			location = selectedElement.singleLocation();
 			if (FieldSpecification.locationIsField(location)) {
