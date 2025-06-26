@@ -1,5 +1,7 @@
 package nl.ou.refd.analysis.subdetectors;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.core.resources.IProject;
@@ -19,13 +21,21 @@ import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
 
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AbstractClasses;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AllSubclasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.AllSuperClasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ClassesByName;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.ConcreteClasses;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DifferenceWithClasses;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DirectSubclasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.DirectSuperClasses;
+import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.FirstConcreteSubclasses;
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.Methods;
+import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.graph.Graph;
+import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
+import nl.ou.refd.locations.streams.ClassStream;
 
 @Execution(SAME_THREAD)
 public class ClassSubdetectorsTest {
@@ -260,7 +270,7 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(superNames.size(), result.size());
 		Assertions.assertTrue(superNames.containsAll(result));
 	}
 	
@@ -297,7 +307,7 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(methodNames.size(), result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
@@ -316,7 +326,7 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(methodNames.size(), result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
@@ -335,7 +345,7 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(methodNames.size(), result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
@@ -354,7 +364,7 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(methodNames.size(), result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
@@ -373,14 +383,19 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(methodNames.size(), result.size());
 		Assertions.assertTrue(methodNames.containsAll(result));
 	}
 	
 	@Test
 	void givenMultipleAbstractClasses_whenDetectAbstractClasses_thenReturnAllAbstractClasses() {
 		// Arrange
-		List<String> clsNames = List.of("AbstractClassE", "AbstractClassH");
+		List<String> clsNames = List.of(
+				"AbstractClassE", 
+				"AbstractClassH", 
+				"AbstractClassJExtendsB", 
+				"AbstractLExtendsK", 
+				"AbstractMExtendsL");
 		AbstractClasses cls = new AbstractClasses();
 		
 		// Act
@@ -390,9 +405,152 @@ public class ClassSubdetectorsTest {
 				.toList();
 		
 		// Assert
-		Assertions.assertEquals(2, result.size());
+		Assertions.assertEquals(clsNames.size(), result.size());
 		Assertions.assertTrue(clsNames.containsAll(result));
 	}
+	
+	
+	@Test
+	void givenAllClasses_whenDetectDifferenceWithClassesClassA_thenReturnAllClassesWithoutA() {
+		// Arrange
+		String excludedClsName = "ClassANoSuper";
+		Set<ProgramLocation> allClasses = Graph.query(querySpace)
+				.locations(Tags.ProgramLocation.CLASS)
+				.locations();
+		List<String> clsNames = allClasses.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		Set<ProgramLocation> excludedCls = new ClassesByName(excludedClsName).applyOn(allClasses);
+		DifferenceWithClasses cls = new DifferenceWithClasses(
+				new ClassStream(new ClassSet(excludedCls)));
+		
+		// Act
+		List<String> result = cls.applyOn(allClasses)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();		
+		
+		// Assert
+		Assertions.assertEquals(clsNames.size() - 1, result.size());
+		Assertions.assertFalse(result.contains(excludedClsName));
+		Assertions.assertTrue(clsNames.containsAll(result));
+	}
+	
+	@Test
+	void givenAllClassesIncludingAbstract_whenDetectConcreteClasses_thenReturnConcreteOnly() {
+		// Arrange
+		List<String> abstractClsNames = List.of(
+				"AbstractClassE", 
+				"AbstractClassH", 
+				"AbstractClassJExtendsB",
+				"AbstractLExtendsK",
+				"AbstractMExtendsL");
+		Set<ProgramLocation> allClasses = Graph.query(querySpace)
+				.locations(Tags.ProgramLocation.CLASS)
+				.locations();
+		List<String> allClsNames = allClasses.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		List<String> concreteClsNames = new ArrayList<>(allClsNames);
+		concreteClsNames.removeAll(abstractClsNames);
+		ConcreteClasses cls = new ConcreteClasses();
+		
+		// Act
+		List<String> result = cls.applyOn(querySpace)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(concreteClsNames.size(), result.size());
+		Assertions.assertTrue(Collections.disjoint(abstractClsNames, result));
+		Assertions.assertTrue(result.containsAll(concreteClsNames));
+	}
+	
+	@Test
+	void givenClassWithDirectSub_whenDetectDirectSubclasses_thenReturnDirectSubsOnly() {
+		// Arrange
+		List<String> subNames = List.of("ClassCExtendsB", "AbstractClassJExtendsB");
+		String superName = "ClassBExtendsA";
+		Set<ProgramLocation> superCls = new ClassesByName(superName).applyOn(querySpace);
+		DirectSubclasses subCls = new DirectSubclasses();
+		
+		// Act
+		List<String> result = subCls.applyOn(superCls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(subNames.size(),  result.size());
+		Assertions.assertTrue(result.containsAll(subNames));
+	}
+	
+	@Test
+	void givenClassWithoutSub_whenDetectDirectSubclasses_thenReturnEmpty() {
+		// Arrange
+		String name = "ClassCExtendsB";
+		Set<ProgramLocation> cls = new ClassesByName(name).applyOn(querySpace);
+		DirectSubclasses subCls = new DirectSubclasses();
+		
+		// Act
+		List<String> result = subCls.applyOn(cls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(0,  result.size());
+	}
+	
+	@Test
+	void givenClassWithDeeperSubs_whenDetectAllSubclasses_thenReturnAllSubs() {
+		// Arrange
+		List<String> subNames = List.of("ClassCExtendsB", "ClassBExtendsA", "AbstractClassJExtendsB");
+		String superName = "ClassANoSuper";
+		Set<ProgramLocation> superCls = new ClassesByName(superName).applyOn(querySpace);
+		AllSubclasses subCls = new AllSubclasses();
+		
+		// Act
+		List<String> result = subCls.applyOn(superCls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(subNames.size(),  result.size());
+		Assertions.assertTrue(result.containsAll(subNames));
+	}
+	
+	/**
+	 *           K
+	 *         /   \
+	 *       (a)L   P
+	 *       /  \
+	 *    (a)M   O
+	 *      |
+	 *      N 
+	 */
+	@Test
+	void givenClassWithDeeperAbstractSubs_whenDetectFirstConcreteSubclasses_thenReturnConcreteSubOnly() {
+		// Arrange
+		List<String> subNames = List.of("ClassNExtendsM", "ClassOExtendsL", "ClassPExtendsK");
+		String superName = "ClassK";
+		Set<ProgramLocation> superCls = new ClassesByName(superName).applyOn(querySpace);
+		FirstConcreteSubclasses subCls = new FirstConcreteSubclasses();
+		
+		// Act
+		List<String> result = subCls.applyOn(superCls)
+				.stream()
+				.map(pl -> pl.<String>getAttribute(Tags.Attributes.NAME))
+				.toList();
+		
+		// Assert
+		Assertions.assertEquals(subNames.size(),  result.size());
+		Assertions.assertTrue(result.containsAll(subNames));
+	}
+	
+	
 	
 	@AfterEach
 	void tearDown() { }
