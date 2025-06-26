@@ -4,12 +4,9 @@ Bundle-Name: RefD
 Bundle-SymbolicName: RefD;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: nl.ou.refd.plugin.Controller
-Bundle-ClassPath: lib/awaitility-4.3.0.jar,
- .
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.ensoftcorp.atlas.ui,
- com.ensoftcorp.atlas.ui.shell,
  com.ensoftcorp.atlas,
  com.ensoftcorp.atlas.db,
  com.ensoftcorp.atlas.db.common,
