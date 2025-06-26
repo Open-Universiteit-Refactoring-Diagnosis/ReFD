@@ -455,7 +455,10 @@ public class GraphQuery {
 	 * @return the resulting query
 	 */
 	public GraphQuery variables(String variableName) {
-		return this.locations(Tags.ProgramLocation.VARIABLE).selectLocation(Tags.Attributes.NAME, variableName);
+		return this.locations(Tags.ProgramLocation.INITIALIZATION)
+				.selectLocation(Tags.Attributes.NAME, variableName)
+				.union(this.locations(Tags.ProgramLocation.ASSIGNMENT)
+						.selectLocation(Tags.Attributes.NAME, variableName + "="));
 	}
 	
 	/**
