@@ -47,13 +47,4 @@ public class VariableStream extends Stream{
 	public VariableStream filterByName(String variableName) {
 		return new VariableStream(this, new VariableSubdetectors.FilterByName(variableName));
 	}
-	
-	/**
-	 * Queries the methods the variables belong to.
-	 * @return the classes the variables belong to
-	 */
-	public MethodStream parentMethods() {
-		return new MethodStream(this, new VariableSubdetectors.ParentMethods());
-	}
-
 }

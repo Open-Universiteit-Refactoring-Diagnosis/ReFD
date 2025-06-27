@@ -11,18 +11,18 @@ import nl.ou.refd.locations.graph.Tags;
 public final class VariableSubdetectors {
 	private VariableSubdetectors(){}
 	
-	public static class MethodVariables extends Subdetector {
-
-		@Override
-		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
-			
-			return Graph.query(locations)
-					.forwardDifference(Tags.Relation.DECLARES)
-					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
-					.locations();
-		}
-		
-	}
+//	public static class MethodVariables extends Subdetector {
+//
+//		@Override
+//		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
+//			
+//			return Graph.query(locations)
+//					.forwardDifference(Tags.Relation.DECLARES)
+//					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
+//					.locations();
+//		}
+//		
+//	}
 	
 	/**
 	 * Filters the provided set of variable locations by name.
@@ -43,20 +43,6 @@ public final class VariableSubdetectors {
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
 			return Graph.query(locations).variables(variableName).locations();
-		}
-	}
-
-	/**
-	 * Queries the methods the provided variable locations belong to.
-	 * @return the methods the provided variable locations belong to
-	 */
-	public static class ParentMethods extends Subdetector {
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
-			throw new NotImplementedException();
 		}
 	}
 
