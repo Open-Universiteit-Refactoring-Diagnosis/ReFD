@@ -6,6 +6,7 @@ import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
 import nl.ou.refd.locations.specifications.VariableSpecification;
 import nl.ou.refd.locations.streams.ClassStream;
+import nl.ou.refd.locations.streams.FieldStream;
 
 /**
  * A collection of classes which represent ScopeShadowing detectors,
@@ -41,11 +42,16 @@ public class ScopeShadowing {
 					.classes()
 					.classesByName(subject.getEnclosingMethod().getEnclosingClass().getClassName());
 			
-			return localClass.fields()
-					.filterByName(subject.getName())
-					.union(localClass.allSuperClasses()
-							.fields()
-							.filterByName(subject.getName())
+			FieldStream localFields = localClass.fields();
+			FieldStream superFields = localClass.allSuperClasses().fields();
+			
+			if (subject.getEnclosingMethod().isStatic()) {
+				localFields = localFields.staticFields();
+				superFields = superFields.staticFields();
+			}
+			
+			return localFields.filterByName(subject.getName())
+					.union(superFields.filterByName(subject.getName())
 							.filterByAccess(AccessModifier.PACKAGE, AccessModifier.PUBLIC, AccessModifier.PROTECTED))
 					.collect();
 		}
