@@ -12,6 +12,7 @@ import nl.ou.refd.locations.graph.ProgramLocation;
  */
 public class FieldSpecification extends LocationSpecification {
 	
+	private AccessModifier modifier;
 	private String fieldName;
 	private ClassSpecification enclosingClass;
 	
@@ -22,7 +23,19 @@ public class FieldSpecification extends LocationSpecification {
 	 * @param enclosingClass the class the field belongs to
 	 */
 	public FieldSpecification(String fieldName, ClassSpecification enclosingClass) {
+		this(fieldName, AccessModifier.PRIVATE, enclosingClass);
+	}
+	
+	/**
+	 * Creates a field location specification from a field name, modifier and
+	 * a specification of a class the field belongs to.
+	 * @param fieldName the name of the field
+	 * @param modifier the modifier of the field
+	 * @param enclosingClass the class the field belongs to
+	 */
+	public FieldSpecification(String fieldName, AccessModifier modifier, ClassSpecification enclosingClass) {
 		this.fieldName = fieldName;
+		this.modifier = modifier;
 		this.enclosingClass = enclosingClass;
 	}
 
@@ -56,6 +69,22 @@ public class FieldSpecification extends LocationSpecification {
 	 */
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
+	}
+	
+	/**
+	 * Returns the access modifier of the field
+	 * @return the access modifier of the field
+	 */
+	public AccessModifier getModifier() {
+		return modifier;
+	}
+	
+	/**
+	 * Sets the field's access modifier
+	 * @param modifier the new modifier of the field
+	 */
+	public void setModifier(AccessModifier modifier) {
+		this.modifier = modifier;
 	}
 
 	/**

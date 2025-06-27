@@ -1,11 +1,12 @@
 package nl.ou.refd.analysis.subdetectors;
 
+import java.util.Arrays;
 import java.util.Set;
-
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
+import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
 import nl.ou.refd.locations.streams.FieldStream;
 
 /**
@@ -110,6 +111,55 @@ public final class FieldSubdetectors {
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
 			return Graph.query(locations).intersection(streamVarArgToGraphQueryArray(intersectWith)).locations();
+		}
+	}
+	
+	/**
+	 * Filters the provided set of field locations by any of the provided access modifiers
+	 * @param one or more access modifiers to filter by
+	 * @return field locations with any of the provided access modifiers
+	 */
+	public static class FilterByAccess extends Subdetector {
+		
+		private final AccessModifier[] modifiers;
+		 
+		public FilterByAccess(AccessModifier... modifiers) {
+			this.modifiers = modifiers;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
+			return Graph.query(locations)
+					.locations(Arrays.stream(modifiers)
+							.map(AccessModifier::toTag)
+							.toArray(Tags.ProgramLocation[]::new))
+					.locations();
+		}
+	}
+	
+	/**
+	 * Integrates incoming streams of fields unionWith into the provided
+	 * set of fields, removing duplicates.
+	 * @param unionWith fields to add to current set, removing duplicates
+	 * @return the result of integrating both sets
+	 */
+	public static class Union extends Subdetector {
+		
+		private final FieldStream[] unionWith;
+		
+		public Union(FieldStream... unionWith) {
+			this.unionWith = unionWith;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
+			return Graph.query(locations).union(streamVarArgToGraphQueryArray(unionWith)).locations();
 		}
 	}
 }

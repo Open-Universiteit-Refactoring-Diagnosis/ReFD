@@ -3,6 +3,7 @@ package nl.ou.refd.locations.streams;
 import nl.ou.refd.analysis.subdetectors.FieldSubdetectors;
 import nl.ou.refd.analysis.subdetectors.Subdetector;
 import nl.ou.refd.locations.collections.FieldSet;
+import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
 
 /**
  * Class which represents a stream of fields. Much like a Java stream,
@@ -88,5 +89,23 @@ public class FieldStream extends Stream {
 	 */
 	public FieldStream intersectionWithFields(FieldStream... intersectWith) {
 		return new FieldStream(this, new FieldSubdetectors.IntersectionWithFields(intersectWith));
+	}
+	
+	/**
+	 * Filters the contained fields by access.
+	 * @param access the access tags to filter by
+	 * @return the filtered stream
+	 */
+	public FieldStream filterByAccess(AccessModifier... modifiers) {
+		return new FieldStream(this, new FieldSubdetectors.FilterByAccess(modifiers));
+	}
+	
+	/**
+	 * Integrates incoming streams unionWith into this stream, removing duplicates.
+	 * @param unionWith fields to add to current stream, removing duplicates
+	 * @return the result of integrating both streams
+	 */
+	public FieldStream union(FieldStream... unionWith) {
+		return new FieldStream(this, new FieldSubdetectors.Union(unionWith));
 	}
 }
