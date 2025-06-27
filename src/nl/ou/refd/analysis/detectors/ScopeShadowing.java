@@ -42,11 +42,9 @@ public class ScopeShadowing {
 					.classesByName(subject.getEnclosingMethod().getEnclosingClass().getClassName());
 			
 			return localClass.fields()
-					.instanceFields()  // TODO check static fields for variables declared in static methods
 					.filterByName(subject.getName())
 					.union(localClass.allSuperClasses()
 							.fields()
-							.instanceFields()
 							.filterByName(subject.getName())
 							.filterByAccess(AccessModifier.PACKAGE, AccessModifier.PUBLIC, AccessModifier.PROTECTED))
 					.collect();
