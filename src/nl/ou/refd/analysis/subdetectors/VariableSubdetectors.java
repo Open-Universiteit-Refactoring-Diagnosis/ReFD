@@ -2,11 +2,8 @@ package nl.ou.refd.analysis.subdetectors;
 
 import java.util.Set;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
-import nl.ou.refd.locations.graph.Tags;
 
 public final class VariableSubdetectors {
 	private VariableSubdetectors(){}
