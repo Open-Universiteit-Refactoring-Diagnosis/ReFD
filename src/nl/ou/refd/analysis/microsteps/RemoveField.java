@@ -1,7 +1,7 @@
 package nl.ou.refd.analysis.microsteps;
 
 import nl.ou.refd.analysis.ModelVisitor;
-import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
+import nl.ou.refd.analysis.detectors.MissingDefinition;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.specifications.FieldSpecification;
@@ -19,7 +19,7 @@ public class RemoveField extends Microstep {
 	 */
 	public RemoveField(FieldSpecification fieldToRemove) {
 		this.fieldToRemove = fieldToRemove;
-		potentialRisk(new BrokenLocalReferences.Field(fieldToRemove));
+		potentialRisk(new MissingDefinition.Field(fieldToRemove));
 	}
 
 	@Override
@@ -31,8 +31,7 @@ public class RemoveField extends Microstep {
 	@Override
 	public void executeOnGraph(Graph graph) {
 		ProgramLocation pl = fieldToRemove.construct(graph);
-		graph.removeProgramLocation(pl);
-		
+		graph.removeProgramLocation(pl);	
 	}
 
 }

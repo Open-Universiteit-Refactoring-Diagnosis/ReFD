@@ -3,9 +3,7 @@ package nl.ou.refd.analysis.detectors;
 import nl.ou.refd.analysis.DetectorVisitor;
 import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.collections.InstructionSet;
-import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.ClassSpecification;
-import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.locations.streams.ClassStream;
 import nl.ou.refd.locations.streams.InstructionStream;
 
@@ -77,41 +75,41 @@ public final class BrokenLocalReferences {
 		}
 		
 	}
-	
-	/**
-	 * Class representing a BrokenLocalReferences detector for a specific field.
-	 * 
-	 * TODO: validate that the scope of this detector is correct
-	 */
-	public static class Field extends Detector<InstructionSet> {
-		
-		private final FieldSpecification subject;
-		
-		/**
-		 * Creates the detector with a FieldSpecification for the field
-		 * @param subject the field in question
-		 */
-		public Field(FieldSpecification subject) {
-			this.subject = subject;
-		}
-
-		@Override
-		public InstructionSet actualRisks() {
-			return new ProgramComponentsGenerator()
-					.stream()
-					.classes()
-					.classesByName(subject.getEnclosingClass().getClassName())
-					.fields()
-					.filterByName(subject.getFieldName())
-					.fieldsCalledAt()
-					.collect();
-		}
-
-		@Override
-		public void accept(DetectorVisitor visitor) {
-			visitor.visit(this);			
-		}
-		
-	}
+//	
+//	/**
+//	 * Class representing a BrokenLocalReferences detector for a specific field.
+//	 * 
+//	 * TODO: validate that the scope of this detector is correct
+//	 */
+//	public static class Field extends Detector<InstructionSet> {
+//		
+//		private final FieldSpecification subject;
+//		
+//		/**
+//		 * Creates the detector with a FieldSpecification for the field
+//		 * @param subject the field in question
+//		 */
+//		public Field(FieldSpecification subject) {
+//			this.subject = subject;
+//		}
+//
+//		@Override
+//		public InstructionSet actualRisks() {
+//			return new ProgramComponentsGenerator()
+//					.stream()
+//					.classes()
+//					.classesByName(subject.getEnclosingClass().getClassName())
+//					.fields()
+//					.filterByName(subject.getFieldName())
+//					.fieldsCalledAt()
+//					.collect();
+//		}
+//
+//		@Override
+//		public void accept(DetectorVisitor visitor) {
+//			visitor.visit(this);			
+//		}
+//		
+//	}
 	
 }

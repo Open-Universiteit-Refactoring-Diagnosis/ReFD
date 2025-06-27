@@ -1,7 +1,6 @@
 package nl.ou.refd.plugin.ui.topbarmenu;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.resources.IProject;
 import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import com.ensoftcorp.open.commons.utilities.MappingUtils;
 
@@ -13,7 +12,6 @@ import nl.ou.refd.locations.graph.SelectionUtil;
 import nl.ou.refd.locations.graph.Tags;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.plugin.Controller;
-import nl.ou.refd.plugin.ui.EclipseUtil;
 
 /**
  * Class representing the menu button for the Rename Field refactoring 

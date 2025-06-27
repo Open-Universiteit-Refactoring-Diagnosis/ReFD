@@ -16,7 +16,6 @@ import nl.ou.refd.analysis.detectors.RemovedConcreteOverride;
  */
 public interface DetectorVisitor {
 	void visit(BrokenLocalReferences.Body detector);
-	void visit(BrokenLocalReferences.Field detector);
 	void visit(BrokenSubTyping.Method detector);
 	void visit(CorrespondingSubclassSpecification.Method detector);
 	void visit(DoubleDefinition.Method detector);
@@ -25,6 +24,7 @@ public interface DetectorVisitor {
 	void visit(LostSpecification.Method detector);
 	void visit(MissingAbstractImplementation.Method detector);
 	void visit(MissingDefinition.Method detector);
+	void visit(MissingDefinition.Field detector);
 	void visit(MissingSuperImplementation.Method detector);
 	void visit(OverloadParameterConversion.Method detector);
 	void visit(RemovedConcreteOverride.Method detector);

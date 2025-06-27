@@ -94,6 +94,11 @@ public abstract class VerdictFunction implements DetectorVisitor {
 	public void visit(MissingDefinition.Method detector) {
 		all(detector);
 	}
+	
+	@Override
+	public void visit(MissingDefinition.Field detector) {
+		all(detector);
+	}
 
 	@Override
 	public void visit(MissingSuperImplementation.Method detector) {
@@ -116,10 +121,6 @@ public abstract class VerdictFunction implements DetectorVisitor {
 	}
 	
 	public void visit(DoubleDefinition.Field detector) {
-		all(detector);
-	}
-	
-	public void visit(BrokenLocalReferences.Field detector) {
 		all(detector);
 	}
 

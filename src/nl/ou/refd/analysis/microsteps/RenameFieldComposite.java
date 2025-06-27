@@ -1,8 +1,8 @@
 package nl.ou.refd.analysis.microsteps;
 
 import nl.ou.refd.analysis.ModelVisitor;
-import nl.ou.refd.analysis.detectors.BrokenLocalReferences;
 import nl.ou.refd.analysis.detectors.DoubleDefinition;
+import nl.ou.refd.analysis.detectors.MissingDefinition;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 
 /**
@@ -17,13 +17,13 @@ public class RenameFieldComposite extends CompositeMicrostep {
 	 * @param target the field that is to be renamed
 	 * @param newName the new field name
 	 */
-	public RenameFieldComposite(FieldSpecification target, FieldSpecification newName) {
+	public RenameFieldComposite(FieldSpecification target, FieldSpecification replacement) {
 		
-		potentialRisk(new DoubleDefinition.Field(newName));
-		potentialRisk(new BrokenLocalReferences.Field(target));
+		potentialRisk(new DoubleDefinition.Field(replacement));
+		potentialRisk(new MissingDefinition.Field(target));
 		
 		compositeMicrostep(new RemoveField(target));
-		compositeMicrostep(new AddField(newName));		
+		compositeMicrostep(new AddField(replacement));		
 	}
 
 	@Override

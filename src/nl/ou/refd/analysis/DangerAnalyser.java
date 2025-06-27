@@ -114,11 +114,6 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	}
 	
 	@Override
-	public void visit(BrokenLocalReferences.Field detector) {
-		handleDetector(detector);		
-	}
-	
-	@Override
 	public void visit(BrokenSubTyping.Method detector) {
 		handleDetector(detector);
 	}
@@ -145,6 +140,11 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 
 	@Override
 	public void visit(MissingDefinition.Method detector) {
+		handleDetector(detector);
+	}
+	
+	@Override
+	public void visit(MissingDefinition.Field detector) {
 		handleDetector(detector);
 	}
 
