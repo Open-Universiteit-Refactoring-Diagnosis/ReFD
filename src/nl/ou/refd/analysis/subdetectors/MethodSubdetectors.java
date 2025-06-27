@@ -616,7 +616,7 @@ public final class MethodSubdetectors {
 					.forwardOn(Graph.query()
 							.universe()
 							.relations(Tags.Relation.DECLARES))
-					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT)
+					.locations(Tags.ProgramLocation.INITIALIZATION, Tags.ProgramLocation.ASSIGNMENT, Tags.ProgramLocation.PARAMETER)
 					.locations();
 		}
 	}

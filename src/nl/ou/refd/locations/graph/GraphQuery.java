@@ -458,7 +458,9 @@ public class GraphQuery {
 		return this.locations(Tags.ProgramLocation.INITIALIZATION)
 				.selectLocation(Tags.Attributes.NAME, variableName)
 				.union(this.locations(Tags.ProgramLocation.ASSIGNMENT)
-						.selectLocation(Tags.Attributes.NAME, variableName + "="));
+						.selectLocation(Tags.Attributes.NAME, variableName + "="))
+				.union(this.locations(Tags.ProgramLocation.PARAMETER)
+						.selectLocation(Tags.Attributes.NAME, variableName));
 	}
 	
 	/**
