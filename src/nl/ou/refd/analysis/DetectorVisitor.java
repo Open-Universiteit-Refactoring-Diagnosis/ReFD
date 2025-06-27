@@ -10,6 +10,7 @@ import nl.ou.refd.analysis.detectors.MissingDefinition;
 import nl.ou.refd.analysis.detectors.MissingSuperImplementation;
 import nl.ou.refd.analysis.detectors.OverloadParameterConversion;
 import nl.ou.refd.analysis.detectors.RemovedConcreteOverride;
+import nl.ou.refd.analysis.detectors.ScopeShadowing;
 
 /**
  * Interface which represents a visitor for detectors.
@@ -27,4 +28,5 @@ public interface DetectorVisitor {
 	void visit(OverloadParameterConversion.Method detector);
 	void visit(RemovedConcreteOverride.Method detector);
 	void visit(DoubleDefinition.Variable detector);
+	void visit(ScopeShadowing.Field detector);
 }

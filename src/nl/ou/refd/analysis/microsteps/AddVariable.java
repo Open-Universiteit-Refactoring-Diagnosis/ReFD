@@ -2,6 +2,7 @@ package nl.ou.refd.analysis.microsteps;
 
 import nl.ou.refd.analysis.ModelVisitor;
 import nl.ou.refd.analysis.detectors.DoubleDefinition;
+import nl.ou.refd.analysis.detectors.ScopeShadowing;
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.specifications.VariableSpecification;
 
@@ -13,8 +14,7 @@ public class AddVariable extends Microstep {
 		this.variableToAdd = variableToAdd;
 		
 		potentialRisk(new DoubleDefinition.Variable(variableToAdd));
-		// TODO add risk of shadowing of parameter
-		// TODO add risk of shadowing of instance field
+		potentialRisk(new ScopeShadowing.Field(variableToAdd));
 	}
 
 	@Override
