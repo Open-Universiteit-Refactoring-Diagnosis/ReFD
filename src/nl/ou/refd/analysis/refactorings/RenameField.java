@@ -25,17 +25,6 @@ public class RenameField extends Refactoring {
 	
 	public VerdictFunction verdictFunction(DangerAggregator aggregator) {
 		return new VerdictFunction(aggregator) {
-			
-			@Override
-			public void visit(DoubleDefinition.Field detector) {
-				all(detector);
-			}
-			
-
-			@Override
-			public void visit(MissingDefinition.Field detector) {
-				all(detector);				
-			}
 		};
 	}
 
