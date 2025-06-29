@@ -1,8 +1,14 @@
 package nl.ou.refd.locations.specifications;
 
-import org.apache.commons.lang3.NotImplementedException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import nl.ou.refd.exceptions.IncompatibleProgramLocationException;
+import org.apache.commons.lang3.NotImplementedException;
+import org.eclipse.jface.text.TextSelection;
+
+import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
+
 import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
@@ -10,23 +16,48 @@ import nl.ou.refd.locations.graph.Tags;
 public class ExpressionSpecification extends LocationSpecification {
 	
 	//private ExpressionSpecification enclosingExpression;
-	private String expression;
+	private Set<ProgramLocation> expression;
 	private MethodSpecification enclosingMethod;
 	
-	public ExpressionSpecification(String expression, MethodSpecification enclosingMethod) {
+	public ExpressionSpecification(Set<ProgramLocation> expression, MethodSpecification enclosingMethod) {
 		this.expression = expression;
 		this.enclosingMethod = enclosingMethod;
 	}
 	
-	public ExpressionSpecification(ProgramLocation location) {
+	public ExpressionSpecification(Set<ProgramLocation> locations, TextSelection selection) {
 //		if (!locationIsExpression(location))
 //			throw new IncompatibleProgramLocationException("Node not tagged with Tags.Node.DATA_FLOW");
 		//this.enclosingExpression = new ExpressionSpecification(Graph.query(location).parent().singleLocation()); //Error: is a CONTROL_FLOW_NODE
-		this.expression = location.<String>getAttribute(Tags.Attributes.NAME);
-		this.enclosingMethod = new MethodSpecification(Graph.query(location)
+		ProgramLocation methodLocation = Graph.query(locations)
 				.containers()
 				.locations(Tags.ProgramLocation.METHOD)
-				.singleLocation());
+				.singleLocation();
+		this.expression = getLocationsFromTextSelection(methodLocation, selection);
+		this.enclosingMethod = new MethodSpecification(methodLocation);
+	}
+
+	/**
+	 * Returns all the Program Locations that intersect with a text selection 
+	 * @param method the program location of the parent method of the selection
+	 * @param selection the selected text which contains the expression
+	 * @return A set of ProgramLocation containing all intersecting locations with the selected text
+	 */
+	private Set<ProgramLocation> getLocationsFromTextSelection(ProgramLocation method, TextSelection selection) {
+		Set<ProgramLocation> result = new HashSet<>();
+		
+		Set<ProgramLocation> childrenLocations = Graph.query(method).contained().locations();
+		
+		result = childrenLocations.stream().filter(location -> {
+			SourceCorrespondence sc = (SourceCorrespondence)location.getAttribute(Tags.Attributes.SOURCE_CORRESPONDENCE);
+			return (sc != null) && 
+					(new SourceCorrespondence(
+							sc.sourceFile, 
+							selection.getOffset(), 
+							selection.getLength()))
+					.contains(sc);
+			}).collect(Collectors.toSet());
+		
+		return result;
 	}
 
 	/**
@@ -61,14 +92,14 @@ public class ExpressionSpecification extends LocationSpecification {
 	 * @return true if the program location is an expression
 	 */
 	public static boolean locationIsExpression(ProgramLocation pl) {
-		return pl.taggedWith(Tags.ProgramLocation.DATAFLOW);
+		return pl.taggedWith(Tags.ProgramLocation.DATAFLOW);  // TODO: change this to check all locations in expression
 	}
 	
 	/**
-	 * Returns the expression as a String.
-	 * @return the expression as String
+	 * Returns the expression as a set of ProgramLocation.
+	 * @return the expression as a set of ProgramLocation
 	 */
-	public String getExpression() {
+	public Set<ProgramLocation> getExpression() {
 		return this.expression;
 	}
 	

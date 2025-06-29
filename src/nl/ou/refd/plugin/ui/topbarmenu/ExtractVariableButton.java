@@ -1,15 +1,17 @@
 package nl.ou.refd.plugin.ui.topbarmenu;
 
+import java.util.Set;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.SelectionUtil;
-import nl.ou.refd.locations.graph.Tags;
 import nl.ou.refd.locations.specifications.ExpressionSpecification;
 import nl.ou.refd.locations.specifications.VariableSpecification;
 import nl.ou.refd.plugin.Controller;
+import nl.ou.refd.plugin.ui.EclipseUtil;
 
 /**
  * Class representing the menu button for the Extract Variable refactoring
@@ -29,13 +31,14 @@ public class ExtractVariableButton extends MenuButtonHandler {
 			return;
 		}
 		
-		ProgramLocation location = selectedElement.locations().iterator().next();
+		Set<ProgramLocation> locations = selectedElement.locations();
 		
 		ExpressionSpecification expressionSource = null;
 		
 		// TODO: can't directly select expression with multiple operators and operands in Atlas
 //		if (ExpressionSpecification.locationIsExpression(location)) {
-			expressionSource = new ExpressionSpecification(location);
+			expressionSource = new ExpressionSpecification(
+					locations, EclipseUtil.currentEditorTextSelection());
 //		}
 //		else {
 //			DisplayUtils.showMessage("Error: Selection was not an expression");
@@ -64,7 +67,4 @@ public class ExtractVariableButton extends MenuButtonHandler {
 			return;
 		}
 	}
-	
-	
-
 }

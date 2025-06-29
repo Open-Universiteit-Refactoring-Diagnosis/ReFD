@@ -46,13 +46,13 @@ public class EclipseUtil {
 	 * Gets the current selected text in the eclipse editor
 	 * @return the selected text or the empty string if none selected
 	 */
-	public static String currentEditorTextSelection() {
+	public static TextSelection currentEditorTextSelection() {
 		ISelection selection = getActivePage().getSelection();
 		
 		if (selection instanceof TextSelection) {
-			return ((TextSelection)selection).getText();
+			return (TextSelection) selection;
 		}
-		return "";
+		return null;
 	}
 	
 	/**
