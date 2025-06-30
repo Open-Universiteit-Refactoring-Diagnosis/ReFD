@@ -17,6 +17,7 @@ import nl.ou.refd.analysis.detectors.RemovedConcreteOverride;
 import nl.ou.refd.analysis.microsteps.AddClass;
 import nl.ou.refd.analysis.microsteps.AddField;
 import nl.ou.refd.analysis.microsteps.AddMethod;
+import nl.ou.refd.analysis.microsteps.CompositeMicrostep;
 import nl.ou.refd.analysis.microsteps.Microstep;
 import nl.ou.refd.analysis.microsteps.MoveMethod;
 import nl.ou.refd.analysis.microsteps.RemoveField;
@@ -77,10 +78,10 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	}
 	
 	/**
-	 * Convenience method to handle a MoveMethod microstep.
+	 * Convenience method to handle a composite microstep.
 	 * @param microstep the MoveMethod microstep to handle
 	 */
-	private void handleMoveMethodMicrostep(MoveMethod microstep) {
+	private void handleCompositeMicrostep(CompositeMicrostep microstep) {
 		microstep.getDetectors().forEach(detector -> detector.accept(this));
 		microstep.getComponentMicrosteps().forEach(componentMicrostep -> componentMicrostep.accept(this));
 	}
@@ -105,7 +106,7 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	
 	@Override
 	public void visit(MoveMethod microstep) {
-		handleMoveMethodMicrostep(microstep);
+		handleCompositeMicrostep(microstep);
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class DangerAnalyser implements ModelVisitor, DangerAggregator {
 	}
 	
 	public void visit(RenameFieldComposite microstep) {
-		handleMicrostep(microstep);
+		handleCompositeMicrostep(microstep);
 	}
 
 }

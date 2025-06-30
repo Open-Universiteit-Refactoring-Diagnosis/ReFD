@@ -1,8 +1,6 @@
 package nl.ou.refd.analysis.microsteps;
 
 import nl.ou.refd.analysis.ModelVisitor;
-import nl.ou.refd.analysis.detectors.DoubleDefinition;
-import nl.ou.refd.analysis.detectors.MissingDefinition;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 
 /**
