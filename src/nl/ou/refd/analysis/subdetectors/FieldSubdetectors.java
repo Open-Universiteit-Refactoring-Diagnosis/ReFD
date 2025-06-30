@@ -13,7 +13,7 @@ import nl.ou.refd.locations.streams.FieldStream;
  */
 public final class FieldSubdetectors {
 	private FieldSubdetectors(){}
-	
+
 	/**
 	 * Filters provided set of fields for fields belonging to instances of classes.
 	 * @return the fields contained within the provided set that belong to instances of classes
@@ -60,9 +60,9 @@ public final class FieldSubdetectors {
 	 * @return field locations with name specified by fieldName
 	 */
 	public static class FilterByName extends Subdetector {
-		
+
 		private final String fieldName;
-		
+
 		public FilterByName(String fieldName) {
 			this.fieldName = fieldName;
 		}
@@ -89,7 +89,7 @@ public final class FieldSubdetectors {
 			return Graph.query(locations).parent().locations();
 		}
 	}
-	
+
 	/**
 	 * Filters the provided set of field locations and keeps only fields also contained
 	 * within incoming streams intersectWith.
@@ -97,9 +97,9 @@ public final class FieldSubdetectors {
 	 * @return the filtered set of field locations
 	 */
 	public static class IntersectionWithFields extends Subdetector {
-		
+
 		private final FieldStream[] intersectWith;
-		
+
 		public IntersectionWithFields(FieldStream... intersectWith) {
 			this.intersectWith = intersectWith;
 		}
