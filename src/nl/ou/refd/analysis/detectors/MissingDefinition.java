@@ -82,7 +82,7 @@ public final class MissingDefinition {
 			return context
 					.fields()
 					.filterByName(subject.getFieldName())
-					.fieldsCalledAt()
+					.fieldAccessAndAssignment()
 					.collect();
 		}
 

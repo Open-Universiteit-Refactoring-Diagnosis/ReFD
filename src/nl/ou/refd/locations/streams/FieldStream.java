@@ -62,6 +62,15 @@ public class FieldStream extends Stream {
 	public InstructionStream fieldsCalledAt() {
 		return new InstructionStream(this, new FieldSubdetectors.FieldsCalledAt());
 	}
+	
+	/**
+	 * Queries the locations in the codebase where the fields contained in this stream 
+	 * are called or receive an assignment.
+	 * @return the callsites of the fields contained within this stream
+	 */
+	public InstructionStream fieldAccessAndAssignment() {
+		return new InstructionStream(this, new FieldSubdetectors.FieldAccessAndAssignment());
+	}
 
 	/**
 	 * Filters the contained fields by name.

@@ -44,13 +44,33 @@ public final class FieldSubdetectors {
 
 	/**
 	 * Queries the locations in the codebase where the provided field locations are called.
-	 * @return the callsites of the provided field locations
+	 * @return the call sites of the provided field locations
 	 */
 	public static class FieldsCalledAt extends Subdetector {
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
 			GraphQuery gq = Graph.query(locations);
 			return gq.successorsOn(gq.universe().relations(Tags.Relation.DATAFLOW)).locations();
+		}
+	}
+
+	/**
+	 * Queries the locations in the codebase where the provided field locations 
+	 * receive assignments or are called (accessed). 
+	 * 
+	 * TODO: Currently it finds too much. The declaration of the field in question
+	 * and any operands on the right hand side of assignments are also found if they have the
+	 * same identifier as the field.
+	 * 
+	 * @return the sites where the provided field locations receive assignments
+	 */
+	public static class FieldAccessAndAssignment extends Subdetector {
+		@Override
+		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
+			GraphQuery gq = Graph.query(locations);
+			return gq.successorsOn(gq.universe().relations(Tags.Relation.DATAFLOW))
+					.union(gq.reverseStepOn(gq.universe()
+					.relations(Tags.Relation.DATAFLOW))).locations();
 		}
 	}
 
