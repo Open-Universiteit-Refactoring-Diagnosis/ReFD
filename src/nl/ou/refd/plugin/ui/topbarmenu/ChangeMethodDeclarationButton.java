@@ -47,7 +47,16 @@ public class ChangeMethodDeclarationButton extends MenuButtonHandler {
 			e.printStackTrace();
 		}
 		
-		MethodSpecification newSpecification;
+		String newMethodName = DisplayUtils.promptString("Rename Method", "Please provide the new name for the method");
+		MethodSpecification newSpecification =
+				new MethodSpecification(
+						newMethodName,
+						methodSource.getParameters(),
+						methodSource.getVisibility(),
+						methodSource.isStatic(),
+						methodSource.isAbstract(),
+						methodSource.getReturnType(),
+						methodSource.getEnclosingClass());
 		
 		try {
 			Controller.getController().changeMethodSpecification(methodSource, newSpecification);

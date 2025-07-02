@@ -51,7 +51,7 @@ public class RenameMethod extends Microstep {
 	@Override
 	public void executeOnGraph(Graph graph) {
 		// Find all references to the target method.
-		GraphQuery gq = graph.query(this.methodToRename.);
+		GraphQuery gq = graph.query(new MethodSet(this.methodToRename).locations());
 		GraphQuery dynamicCallSites =
 				gq
 					.universe()
@@ -68,5 +68,7 @@ public class RenameMethod extends Microstep {
 		for (ProgramLocation callSite : callSites) {
 			System.out.print(callSite);
 		}
+		
+		
 	}
 }

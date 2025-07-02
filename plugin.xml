@@ -18,6 +18,14 @@
       </command>
    </extension>
    
+   <extension point="org.eclipse.ui.commands">
+		<command
+   			defaultHandler="nl.ou.refd.plugin.ui.topbarmenu.ChangeMethodDeclarationButton"
+   			id="refd.ChangeMethodDeclarationButton"
+   			name="ChangeMethodDeclarationButton">
+   		</command>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -41,12 +49,17 @@
                   tooltip="Pull up a method to one of its superclasses">
             </command>
             <command
+					commandId="refd.ChangeMethodDeclarationButton"
+            		label="Change Method Declaration"
+            		style="push"
+            		tooltip="Change the declaration of a method">
+            </command>
+            <command
                   commandId="refd.CombineMethodsIntoClassButton"
                   label="Combine Methods into Class"
                   style="push"
                   tooltip="Combine a number of methods into a newly created class">
             </command>
-            
          </menu>
       </menuContribution>
    </extension>
