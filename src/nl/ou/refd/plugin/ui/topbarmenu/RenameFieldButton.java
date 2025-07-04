@@ -26,7 +26,7 @@ public class RenameFieldButton extends MenuButtonHandler {
 	public void handle(ExecutionEvent event) {
 		
 		// get the field selected by the user
-		GraphQuery selectedElement = SelectionUtil.getSelection().locations(Tags.ProgramLocation.INSTANCE_VARIABLE);
+		GraphQuery selectedElement = SelectionUtil.getSelection().locations(Tags.ProgramLocation.FIELD);
 		
 		ProgramLocation location = null;
 		FieldSpecification fieldSource = null;

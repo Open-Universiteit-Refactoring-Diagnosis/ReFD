@@ -7,8 +7,6 @@ import nl.ou.refd.locations.generators.ProgramComponentsGenerator;
 import nl.ou.refd.locations.specifications.FieldSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
 import nl.ou.refd.locations.streams.ClassStream;
-import nl.ou.refd.locations.streams.FieldStream;
-import nl.ou.refd.locations.streams.InstructionStream;
 
 /**
  * A collection of classes which represent MissingDefinition detectors,

@@ -67,10 +67,12 @@ public final class FieldSubdetectors {
 	public static class FieldAccessAndAssignment extends Subdetector {
 		@Override
 		public Set<ProgramLocation> applyOn(Set<ProgramLocation> locations) {
-			GraphQuery gq = Graph.query(locations);
-			return gq.successorsOn(gq.universe().relations(Tags.Relation.DATAFLOW))
-					.union(gq.reverseStepOn(gq.universe()
-					.relations(Tags.Relation.DATAFLOW))).locations();
+			GraphQuery subject = Graph.query(locations); // contains a single location, the subject
+			GraphQuery relations = subject.successorsOn(subject.universe()
+					.relations(Tags.Relation.DATAFLOW))
+					.union(subject.reverseStepOn(subject.universe()
+					.relations(Tags.Relation.DATAFLOW))); // dataflow successors and ancestors of subject
+			return relations.difference(subject).locations(); // explicitly exclude subject from relations
 		}
 	}
 
