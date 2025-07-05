@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
+import com.ensoftcorp.atlas.core.index.filter.IndexFilter;
+import com.ensoftcorp.atlas.core.index.filter.IndexFilterService;
 import com.ensoftcorp.atlas.core.licensing.AtlasLicenseException;
 import com.ensoftcorp.atlas.ui.util.ProjectImporterUtil;
 
@@ -32,7 +34,6 @@ import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.FirstConcreteSubclasse
 import nl.ou.refd.analysis.subdetectors.ClassSubdetectors.Methods;
 import nl.ou.refd.locations.collections.ClassSet;
 import nl.ou.refd.locations.graph.Graph;
-import nl.ou.refd.locations.graph.GraphQuery;
 import nl.ou.refd.locations.graph.ProgramLocation;
 import nl.ou.refd.locations.graph.Tags;
 import nl.ou.refd.locations.streams.ClassStream;
@@ -40,8 +41,8 @@ import nl.ou.refd.locations.streams.ClassStream;
 @Execution(SAME_THREAD)
 public class ClassSubdetectorsTest {
 
-	static final String TEST_PROJECT_NAME = "ReFDTestProject";
-	static final String TEST_PACKAGE_NAME = "nl.ou.refd.test.analysis.subdetectors.classes";
+	static final String TEST_PROJECT_NAME = "SampleAtlasPluginProject";
+	static final String TEST_PACKAGE_NAME = "nl.ou.refd.mock.analysis.subdetectors.classes";
 	
 	private static Set<ProgramLocation> querySpace = null;
 	
@@ -49,9 +50,13 @@ public class ClassSubdetectorsTest {
 	static void initAll() { 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(TEST_PROJECT_NAME);
+		
+		IndexFilter filter = new IndexFilter(TEST_PACKAGE_NAME, false, false);
 
 		try {
-			ProjectImporterUtil.mapProject(project);  // Blocking
+			if (IndexFilterService.getInstance().setFilters(List.of(), List.of(filter), false, true)) {
+				ProjectImporterUtil.mapProject(project);  // Blocking
+			}
 		} catch (AtlasLicenseException e) {
 			System.out.println("Atlas Indexing failed. No valid license");
 		}
