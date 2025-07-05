@@ -241,6 +241,7 @@ public final class ClassSubdetectors {
 	/**
 	 * Queries the provided classes for their direct subclass and filters these for
 	 * concrete classes.
+	 * FIXME: this is not what the query does. Check corresponding test of this method.
 	 * @return the direct concrete subclasses of the provided
 	 */
 	public static class FirstConcreteSubclasses extends Subdetector {
