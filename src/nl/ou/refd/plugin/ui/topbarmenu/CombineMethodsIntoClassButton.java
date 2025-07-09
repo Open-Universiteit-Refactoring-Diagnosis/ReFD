@@ -23,6 +23,7 @@ import nl.ou.refd.locations.specifications.PackageSpecification;
 import nl.ou.refd.locations.specifications.LocationSpecification.AccessModifier;
 import nl.ou.refd.plugin.Controller;
 import nl.ou.refd.plugin.ui.EclipseUtil;
+import nl.ou.refd.plugin.ui.RefactoringDialog;
 
 /**
  * Class representing the menu button for the Combine Methods into Class
@@ -52,7 +53,9 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 			return;
 		}
 		
-		String newClassString = DisplayUtils.promptString("New Class", "Please provide the visibility, name and package of the new class to combine method into (pacakge, visibility, classname)");
+		String[] yolo = RefactoringDialog.CombineMethodsDialog.showDialog();
+		String newClassString = "private,test,default";
+//		String newClassString = DisplayUtils.promptString("New Class", "Please provide the visibility, name and package of the new class to combine method into (pacakge, visibility, classname)");
 		String[] splitClassString = newClassString.split(",");
 		
 		ClassSpecification newClassLocation = new ClassSpecification(splitClassString[2], AccessModifier.fromString(splitClassString[1]), new PackageSpecification(splitClassString[0]));
