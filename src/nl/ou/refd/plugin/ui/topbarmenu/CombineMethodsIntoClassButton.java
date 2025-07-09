@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -45,7 +48,7 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 		try {
 			currentProject = EclipseUtil.currentProject();
 		} catch (NoActiveProjectException e) {
-			DisplayUtils.showMessage("Error: No active project");
+			MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "Error: No active project");
 			return;
 		}
 		
@@ -67,7 +70,7 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 		try {
 			Controller.getController().combineMethodsIntoClass(targets, newClassLocation);
 		} catch (NoActiveProjectException e) {
-			DisplayUtils.showMessage("Error: No active project");
+			MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "Error: No active project");
 			return;
 		}
 	}
