@@ -56,6 +56,7 @@ public final class RefactoringDialog {
 
 			Combo visibilityCombo = new Combo (shell, SWT.READ_ONLY);
 			visibilityCombo.setItems("public", "protected", "private");
+			visibilityCombo.select(0);
 
 			Label nameLabel = new Label(shell, SWT.NONE);
 			nameLabel.setText("Name:");
@@ -72,16 +73,19 @@ public final class RefactoringDialog {
 			shell.setDefaultButton (ok);
 			ok.setText ("OK");
 			ok.addSelectionListener(widgetSelectedAdapter(event -> {
+				boolean inputOK = true;
 				result[0] = visibilityCombo.getItem(visibilityCombo.getSelectionIndex());
 				result[1] = nameText.getText();
 				result[2] = packageText.getText();
 				for (String s : result) {
 					if (s == null || s.isEmpty()) { // warn user when input is not complete
-						MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "A field was empty or null. Please provide all information.");
+						inputOK = false;
 						break;
 					}
 				}
-				shell.close();
+				if (inputOK) {shell.close();}
+				else {MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "A field was empty or null. Please provide all information.");}
+
 			}));
 
 			// Cancel button
@@ -99,7 +103,7 @@ public final class RefactoringDialog {
 			while (!shell.isDisposed ()) {
 				if (!display.readAndDispatch ()) display.sleep ();
 			}
-			
+
 			return result;
 		}
 	}
