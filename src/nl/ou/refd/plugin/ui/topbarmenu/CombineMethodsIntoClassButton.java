@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import com.ensoftcorp.open.commons.utilities.MappingUtils;
 
 import nl.ou.refd.exceptions.NoActiveProjectException;
@@ -53,12 +52,10 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 			return;
 		}
 		
-		String[] yolo = RefactoringDialog.CombineMethodsDialog.showDialog();
-		String newClassString = "private,test,default";
-//		String newClassString = DisplayUtils.promptString("New Class", "Please provide the visibility, name and package of the new class to combine method into (pacakge, visibility, classname)");
-		String[] splitClassString = newClassString.split(",");
+		// show dialog to obtain new class data from the user
+		String[] newClassStrings = RefactoringDialog.CombineMethodsDialog.showDialog();
 		
-		ClassSpecification newClassLocation = new ClassSpecification(splitClassString[2], AccessModifier.fromString(splitClassString[1]), new PackageSpecification(splitClassString[0]));
+		ClassSpecification newClassLocation = new ClassSpecification(newClassStrings[1], AccessModifier.fromString(newClassStrings[0]), new PackageSpecification(newClassStrings[2]));
 		
 		ElementListSelectionDialog destinationSelector = new ElementListSelectionDialog(HandlerUtil.getActiveShell(event), new LabelProvider());
 		destinationSelector.setElements(new ProjectProgramComponentsGenerator(currentProject.getName()).stream().classes().methods().collect().toLocationSpecifications().toArray(new MethodSpecification[]{}));
