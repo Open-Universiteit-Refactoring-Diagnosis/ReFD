@@ -54,6 +54,7 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 		
 		// show dialog to obtain new class data from the user
 		String[] newClassStrings = RefactoringDialog.CombineMethodsDialog.showDialog();
+		if (newClassStrings == null) return; // the user pressed cancel
 		
 		ClassSpecification newClassLocation = new ClassSpecification(newClassStrings[1], AccessModifier.fromString(newClassStrings[0]), new PackageSpecification(newClassStrings[2]));
 		

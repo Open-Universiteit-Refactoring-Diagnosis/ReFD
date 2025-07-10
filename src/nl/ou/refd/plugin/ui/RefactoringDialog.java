@@ -23,13 +23,13 @@ public final class RefactoringDialog {
 	 */
 	public static class CombineMethodsDialog {
 
-		private static String[] result = new String[3];
+		private static String[] result = null;
 
 		/**
 		 * Show the dialog and return the user's input as an array of Strings.
 		 * If the user leaves any field blank, will show an alert and persist
 		 * until all input is non-empty.
-		 * @return the user's input, an array of strings of size 3.
+		 * @return the user's input, an array of strings of size 3, or null if the user cancels.
 		 */
 		public static String[] showDialog() {
 
@@ -74,18 +74,18 @@ public final class RefactoringDialog {
 			ok.setText ("OK");
 			ok.addSelectionListener(widgetSelectedAdapter(event -> {
 				boolean inputOK = true;
+				result = new String[3];
 				result[0] = visibilityCombo.getItem(visibilityCombo.getSelectionIndex());
 				result[1] = nameText.getText();
 				result[2] = packageText.getText();
 				for (String s : result) {
-					if (s == null || s.isEmpty()) { // warn user when input is not complete
+					if (s == null || s.isEmpty()) { 
 						inputOK = false;
 						break;
 					}
 				}
-				if (inputOK) {shell.close();}
+				if (inputOK) shell.close();
 				else {MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "A field was empty or null. Please provide all information.");}
-
 			}));
 
 			// Cancel button
