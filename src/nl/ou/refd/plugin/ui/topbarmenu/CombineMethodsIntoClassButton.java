@@ -61,6 +61,8 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 		destinationSelector.open();
 		
 		Object[] result = destinationSelector.getResult();
+		if (result == null) return; // the user pressed cancel on the selection dialog
+		// TODO: properly handle this with warnings, also handle the case where user presses OK on empty selection.
 		
 		List<MethodSpecification> targets = Arrays.asList(Arrays.copyOf(result, result.length, MethodSpecification[].class));
 		
