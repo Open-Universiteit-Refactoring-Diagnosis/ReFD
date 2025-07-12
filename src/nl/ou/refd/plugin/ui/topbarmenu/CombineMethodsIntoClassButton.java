@@ -5,15 +5,20 @@ import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import com.ensoftcorp.open.commons.utilities.MappingUtils;
 
+import nl.ou.refd.exceptions.LocationSetException;
 import nl.ou.refd.exceptions.NoActiveProjectException;
 import nl.ou.refd.locations.generators.ProjectProgramComponentsGenerator;
+import nl.ou.refd.locations.graph.Graph;
 import nl.ou.refd.locations.specifications.ClassSpecification;
 import nl.ou.refd.locations.specifications.MethodSpecification;
 import nl.ou.refd.locations.specifications.PackageSpecification;
@@ -51,8 +56,16 @@ public class CombineMethodsIntoClassButton extends MenuButtonHandler {
 		
 		String newClassString = DisplayUtils.promptString("New Class", "Please provide the visibility, name and package of the new class to combine method into (pacakge, visibility, classname)");
 		String[] splitClassString = newClassString.split(",");
+		String packageName = splitClassString[0];
+		try {
+			Graph.query().universe().pkg(packageName).singleLocation();
+		}
+		catch (LocationSetException e) {
+			MessageDialog.openWarning(new Shell(Display.getCurrent()), "Alert", "Couldn't find package '" + packageName + "' are you sure you provided the correct name?");
+			return;
+		}
 		
-		ClassSpecification newClassLocation = new ClassSpecification(splitClassString[2], AccessModifier.fromString(splitClassString[1]), new PackageSpecification(splitClassString[0]));
+		ClassSpecification newClassLocation = new ClassSpecification(splitClassString[2], AccessModifier.fromString(splitClassString[1]), new PackageSpecification(packageName));
 		
 		ElementListSelectionDialog destinationSelector = new ElementListSelectionDialog(HandlerUtil.getActiveShell(event), new LabelProvider());
 		destinationSelector.setElements(new ProjectProgramComponentsGenerator(currentProject.getName()).stream().classes().methods().collect().toLocationSpecifications().toArray(new MethodSpecification[]{}));
